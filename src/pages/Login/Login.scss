@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css?family=Fredoka+One');
+
+:root {
+  --color-bg: #5C419A;
+  --color-primary: #EF5B7E;
+  --color-secondary: #59C2AA;
+  --size-logo: 2rem;
+  --font-family: 'Fredoka One', sans-serif;
+  --animation-speed: 10s;
+}
+
+.logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: var(--size-logo);
+  height: var(--size-logo);
+  color: var(--color-bg);
+  font-size: calc(var(--size-logo) * .65);
+  font-weight: bold;
+  font-family: var(--font-family);
+  user-select: none;
+  
+  &::after,
+  &::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    content: '';
+    border-radius: calc(var(--size-logo) * .3);
+    mix-blend-mode: color-dodge;
+  }
+  
+  &::before {
+    background-color: var(--color-primary);
+    transform: rotate(-30deg);
+    z-index: -2;
+    animation: rotate1 var(--animation-speed) linear infinite;
+  }
+  
+  &::after {
+    background-color: var(--color-secondary);
+    transform: rotate(20deg);
+    z-index: -1;
+    animation: rotate2 calc(var(--animation-speed) * .9) linear infinite;
+  }
+}
+
+@keyframes rotate1 {
+  from {
+    transform: rotate(-30deg);
+  }
+  to {
+    transform: rotate(330deg);
+  }
+}
+
+@keyframes rotate2 {
+  from {
+    transform: rotate(380deg);
+  }
+  to {
+    transform: rotate(20deg);
+  }
+}
+
