@@ -1,0 +1,19 @@
+.page_container{
+    .learn_page_content{
+        height: 100vh;
+        width: 100%;
+        padding-top: 110px;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .learn_page_title_container{
+            padding-bottom: 20px;
+            .learn_page_title{
+            width: 150px;}
+        }
+        .lessons_list{
+            width: 55%;
+        }
+    }
+}

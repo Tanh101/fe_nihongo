@@ -1,0 +1,271 @@
+
+
+.wrapper {
+  width: 100%;
+  height: 100vh;
+  padding-top: 100px;
+}
+
+svg {
+  width: 300px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+#head_x5F_front {
+	animation-name: front;
+	opacity: 1;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+}
+
+#head_x5F_side {
+	animation-name: side;
+	opacity: 1;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+
+}
+
+@keyframes side {
+
+	0%,50% {
+	   opacity: 0
+	}
+
+	51%,70%{
+	   opacity: 1
+	}
+
+	71%,75%{
+	   opacity: 0
+	}
+
+	76%,80%{
+	   opacity: 1
+	}
+
+	81%,100%{
+	   opacity: 0
+	}
+
+}
+
+@keyframes front {
+
+		0%,50% {
+	   opacity: 1
+	}
+
+	51%,70%{
+	   opacity: 0
+	}
+
+	71%,75%{
+	   opacity: 1
+	}
+
+	76%,80%{
+	   opacity: 0
+	}
+
+	81%,100%{
+	   opacity: 1
+	}
+}
+
+
+#line_1 {
+	animation-name: line_1;
+	animation-duration: 4s;
+	stroke-dasharray: 60px 60px;
+	stroke-dashoffset: 0px;
+	animation-direction: normal;
+	animation-iteration-count: infinite;
+}
+
+#line_2 {
+	animation-name: line_2;
+	animation-duration: 4s;
+	stroke-dasharray: 40px 40px;
+	stroke-dashoffset: 0px;
+	animation-direction: normal;
+	animation-iteration-count: infinite;
+}
+
+@keyframes line_1 {
+		0%, 51%{
+			stroke-dashoffset: 60px;
+		}
+
+		55%, 75% {
+			stroke-dashoffset: -60px;
+		}
+
+		76%, 77% {
+			stroke-dashoffset: -120px;
+		}
+
+		82%, 100% {
+			stroke-dashoffset: -180px;
+		}
+	}
+
+@keyframes line_2 {
+		0%, 51%{
+			stroke-dashoffset: 40px;
+		}
+
+		55%, 75% {
+			stroke-dashoffset: -40px;
+		}
+
+		76%, 77% {
+			stroke-dashoffset: -80px;
+		}
+
+		82%, 100% {
+			stroke-dashoffset: -120px;
+		}
+	}
+
+
+#line_3 {
+	animation-name: line_3;
+	animation-duration: 4s;
+	stroke-dasharray: 60px 60px;
+	stroke-dashoffset: 0px;
+	animation-direction: normal;
+	animation-iteration-count: infinite;
+}
+
+#line_4 {
+	animation-name: line_4;
+	animation-duration: 4s;
+	stroke-dasharray: 40px 40px;
+	stroke-dashoffset: 0px;
+	animation-direction: normal;
+	animation-iteration-count: infinite;
+}
+
+@keyframes line_3 {
+		0%, 71%{
+			stroke-dashoffset: 60px;
+		}
+
+		76%, 80% {
+			stroke-dashoffset: -60px;
+		}
+
+		81%, 82% {
+			stroke-dashoffset: -60px;
+		}
+
+		87%, 100% {
+			stroke-dashoffset: -180px;
+		}
+	}
+
+@keyframes line_4 {
+		0%, 71%{
+			stroke-dashoffset: 40px;
+		}
+
+		76%, 80% {
+			stroke-dashoffset: -40px;
+		}
+
+		81%, 82% {
+			stroke-dashoffset: -40px;
+		}
+
+		87%, 100% {
+			stroke-dashoffset: -120px;
+		}
+	}
+
+
+	#tail {
+		transform-origin: 155.032px 193.788px;
+		animation-name: tail;
+		animation-duration: 2s;
+		animation-direction: normal;
+		animation-timing-function: ease;
+		animation-iteration-count: infinite;
+	}
+
+	@keyframes tail {
+		0% {
+			transform: rotate(5deg);
+		}
+
+		50% {
+			transform: rotate(-5deg);
+		}
+
+		
+
+		100%{
+			transform: rotate(5deg);
+		}
+
+	}
+
+	#dog {
+		transform-origin: 150px 251.164px;
+		animation-name: dog;
+		animation-duration: 4s;
+		animation-direction: normal;
+		animation-timing-function: ease;
+		animation-iteration-count: infinite;
+
+	}
+
+	@keyframes dog {
+
+		0%, 90%, 95%, 99%, 100%{
+			transform: scaleY(1);
+		}
+
+		92%, 97%{
+			transform: scaleY(1.02);
+		}
+
+		
+	}
+
+    .newtons-cradle {
+        width: 4em;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .newtons-cradle div {
+        width: 0.8em;
+        height: 0.8em;
+        border-radius: 50%;
+        background-color: #fc2f70;
+      }
+      .newtons-cradle div:nth-of-type(1) {
+        transform: translateX(-100%);
+        animation: left-swing 0.5s ease-in alternate infinite;
+      }
+      .newtons-cradle div:nth-of-type(3) {
+        transform: translateX(-95%);
+        animation: right-swing 0.5s ease-out alternate infinite;
+      }
+      @keyframes left-swing {
+        50%, 100% { transform: translateX(95%); }
+      }
+      @keyframes right-swing {
+        50% {transform: translateX(-95%); }
+        100% {transform: translateX(100%); }
+      }
+      
+      
+      

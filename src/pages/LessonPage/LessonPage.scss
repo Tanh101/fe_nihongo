@@ -1,0 +1,14 @@
+.lesson_page_container{
+    .cancel_button{
+        right: 20px;
+        z-index: 5;
+        top: 10px;
+    }
+    .lesson_page_content{
+        width: 50%;
+        position: absolute;
+        top: 15%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
