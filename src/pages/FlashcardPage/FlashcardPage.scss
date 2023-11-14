@@ -1,0 +1,19 @@
+.page_container{
+    .flashcard_page_content{
+        height: 100vh;
+        width: 100%;
+        padding-top: 110px;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .flashcard_page_title_container{
+            padding-bottom: 20px;
+            .flashcard_page_title{
+            width: 250px;}
+        }
+        .flashcards_list{
+            width: 70%;
+        }
+    }
+}

@@ -1,18 +1,13 @@
 import React from 'react';
-
+import './Register.scss';
+import LoginNavbar from '../../components/LoginNavbar/LoginNavbar';
 function Register() {
   return (
-    <div>
-      <header className="header bg-white shadow">
-        <nav className="mx-auto flex max-w-full items-center justify-between px-10 py-4">
-          <a href="/" className="nav_logo flex items-center text-xl font-semibold text-black">
-            <img className="cover-fill mr-5 h-10 w-10 rounded-3xl" src="https://example.com/images/logo2.png" alt="" />
-            <p>DokiDoki</p>
-          </a>
-        </nav>
-      </header>
-
-      <form method="POST" id="registration-form" action="" className="mb-6 px-5">
+    <div className='container_div h-full'>
+      <div className="register_page_background"></div>
+      <LoginNavbar landingPage={false}></LoginNavbar>
+      <div className='h-full'>
+      <form method="POST" id="registration-form" action="" className="mb-6 px-5 pt-40">
         <input type="hidden" name="csrfmiddlewaretoken" value="{/* csrf_token */}" />
         <div className="form max-w-lg mx-auto py-11 px-12 bg-white shadow-lg rounded-3xl mt-6">
           <h1 className="text-center text-3xl font-bold mb-10">Register</h1>
@@ -29,6 +24,7 @@ function Register() {
           </p>
         </div>
       </form>
+    </div>
     </div>
   );
 }

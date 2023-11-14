@@ -1,0 +1,59 @@
+.login_navbar {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 9;
+    background-color: white;
+    opacity: 0.9;
+    .login_navbar_logo_container{
+        width: 200px;
+        height: 70px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        .logo_img{
+            width: 60px;
+            height: 60px;
+        }
+
+        .login_nav_bar_title{
+            width: 120px;
+            font-size: 18px;
+            font-weight: 600;
+            color: black;
+        }
+    }
+
+    .login_navbar_buttons_container{
+        width: 250px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .login_button{
+            width: 90px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #34D399;
+            opacity: 1;
+            font-weight: 600;
+        }
+        .login_button:hover{
+            background-color: #10B981;}
+            
+        .register_button{
+            width: 120px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #93C5FD;
+            font-weight: 600;
+        }
+        .register_button:hover{
+            background-color: #60A5FA;}
+    }
+}

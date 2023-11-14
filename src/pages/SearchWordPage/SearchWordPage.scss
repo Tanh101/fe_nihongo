@@ -1,0 +1,15 @@
+.page_container{
+    .search_word_page_content{
+        height: 100vh;
+        width: 100%;
+        padding-top: 130px;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .result_list{
+            width: 70%;
+            height: 70vh;
+        }
+    }
+}
