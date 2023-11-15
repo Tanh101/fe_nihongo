@@ -1,0 +1,17 @@
+import "./DictionaryPage.scss";
+import Navbar from "../../components/Navbar/Navbar";
+import WordSearch from "../../components/WordSearch/WordSearch";
+
+function DictionaryPage() {
+
+  return (
+    <div className="page_container">
+      <Navbar active_category="search_word" />
+      <div className="search_word_page_content bg-gray-100">
+        <WordSearch input=''/>
+      </div>
+    </div>
+  );
+}
+
+export default DictionaryPage;
