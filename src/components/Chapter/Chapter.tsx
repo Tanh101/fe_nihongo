@@ -1,4 +1,3 @@
-import React from "react";
 import "./Chapter.scss";
 import LessonShowCase from "../LessonShowCase/LessonShowCase";
 import { JapaneseLesson } from "../DummyData";

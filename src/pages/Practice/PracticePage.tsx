@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, Button, List, Skeleton } from "antd";
 import "./PracticePage.scss";
 import Navbar from "../../components/Navbar/Navbar";
