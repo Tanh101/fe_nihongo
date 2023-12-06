@@ -1,5 +1,4 @@
-import React from "react";
-import "./Lessonpage.scss";
+import "./LessonPage.scss";
 import { useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";

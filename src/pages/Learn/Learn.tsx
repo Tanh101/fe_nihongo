@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import "./Learn.scss";
 import Navbar from "../../components/Navbar/Navbar";
 import { japaneseLessons1 } from "../../components/DummyData";

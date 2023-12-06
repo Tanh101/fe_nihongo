@@ -1,36 +1,46 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import "./Login.scss";
 import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
+import customAxios from "../../api/AxiosInstance";
+import { Toastify } from "../../toastify/Toastify";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate(); // Initialize the history object
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
     console.log(formData.get("email"));
-    await axios
-      .post("https://mazii.vantanhly.io.vn/api/auth/login", formData)
+    await customAxios
+      .post("/auth/login", formData)
       .then((res) => {
         if (res.status === 200) {
-          navigate("/learn");
+          Toastify.success("Login successfully");
+          const token = res.data.access_token;
+          localStorage.setItem("token", token);
+
+          const role = res.data.user.role;
+
+          if (role === "admin") {
+            navigate("/dashboard");
+          }
+          else {
+            navigate("/learn");
+          }
+
         } else {
-          toast.error("Incorrect username or password", {
-            position: "top-center",
-            autoClose: 3000, // Optional: Close the message after 3 seconds
-          });
+          Toastify.error("Incorrect username or password");
         }
       })
       .catch((err) => {
-        console.log(err);
+        if (err.response.data.message)
+          Toastify.error(err.response.data.message);
+        Toastify.error("Incorrect password");
       });
   };
 
@@ -95,6 +105,7 @@ const Login: React.FC = () => {
             </div>
             <button
               type="submit"
+              id="login"
               className="rounded-2xl text-xl block w-full mt-8 mb-4 py-3 px-4 bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-300 hover:to-blue-300 focus:ring-2 focus:ring-green-300 focus:ring-opacity-50 text-white font-medium"
             >
               Login

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, List, Skeleton } from "antd";
 import "./FlashcardPage.scss";
 import Navbar from "../../components/Navbar/Navbar";

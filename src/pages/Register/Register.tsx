@@ -1,4 +1,3 @@
-import React from 'react';
 import './Register.scss';
 import LoginNavbar from '../../components/LoginNavbar/LoginNavbar';
 function Register() {
