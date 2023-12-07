@@ -6,9 +6,9 @@ import "./Navbar.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
-  faStairs,
+  faGraduationCap,
+  faPen,
   faBoltLightning,
-  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 interface Props {
   active_category: string;
@@ -17,21 +17,21 @@ interface Props {
 const Navbar: React.FC<Props> = (props) => {
   const navigate = useNavigate();
   const handleLearnClick = () => {
-    navigate("/Learn");
+    navigate("/learn");
   };
   const handleFlashcardClick = () => {
-    navigate("/Flashcard");
+    navigate("/flashcard");
   };
   const handlePracticeClick = () => {
-    navigate("/Practice");
+    navigate("/practice");
   };
-  const handleSearchWordClick = () => {
-    navigate("/SearchWord");
+  const handleDictionaryClick = () => {
+    navigate("/dictionary");
   };
   let learnActive: boolean = false;
   let flashcardActive: boolean = false;
   let practiceActive: boolean = false;
-  let searchWordActive: boolean = false;
+  let DictionaryActive: boolean = false;
 
   switch (props.active_category) {
     case "learn":
@@ -44,7 +44,7 @@ const Navbar: React.FC<Props> = (props) => {
       practiceActive = true;
       break;
     case "search_word":
-      searchWordActive = true;
+      DictionaryActive = true;
       break;
   }
   return (
@@ -62,7 +62,7 @@ const Navbar: React.FC<Props> = (props) => {
           }
           onClick={handleLearnClick}
         >
-          <FontAwesomeIcon icon={faBook} />
+          <FontAwesomeIcon icon={faGraduationCap} />
           &ensp;Learn
         </button>
         <button
@@ -73,7 +73,7 @@ const Navbar: React.FC<Props> = (props) => {
           }
           onClick={handlePracticeClick}
         >
-          <FontAwesomeIcon icon={faStairs} />
+          <FontAwesomeIcon icon={faPen} />
           &ensp;Practice
         </button>
         <button
@@ -89,14 +89,14 @@ const Navbar: React.FC<Props> = (props) => {
         </button>
         <button
           className={
-            searchWordActive
+            DictionaryActive
               ? "search_word_button active_category"
               : "search_word_button"
           }
-          onClick={handleSearchWordClick}
+          onClick={handleDictionaryClick}
         >
-          <FontAwesomeIcon icon={faMagnifyingGlass} />
-          &ensp;Search Word
+          <FontAwesomeIcon icon={faBook} />
+          &ensp;Dictionary
         </button>
       </div>
       <div className="user_account">

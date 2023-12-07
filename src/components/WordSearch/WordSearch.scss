@@ -1,0 +1,5 @@
+.suggestions-container {
+    .suggestion-item:not(:last-child) {
+        border-bottom: 1px solid #d1d5db; // Gray-300 color
+    }
+}
