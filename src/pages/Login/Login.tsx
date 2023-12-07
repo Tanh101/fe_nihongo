@@ -28,11 +28,9 @@ const Login: React.FC = () => {
 
           if (role === "admin") {
             navigate("/dashboard");
-          }
-          else {
+          } else {
             navigate("/learn");
           }
-
         } else {
           Toastify.error("Incorrect username or password");
         }
@@ -56,7 +54,9 @@ const Login: React.FC = () => {
         >
           <input type="hidden" name="csrf-token" value="csrf_token" />
           <div className="form max-w-lg mx-auto py-12 px-12 bg-white shadow-lg rounded-3xl">
-            <h1 className="text-center text-3xl font-bold mb-10">Login</h1>
+            <h1 className="px-44 flex flex-row items-center justify-center text-3xl font-bold mb-10 bg-gradient-to-r from-blue-500 to-purple-500 inline-block bg-clip-text text-transparent">
+              Login
+            </h1>
             <label
               htmlFor="email"
               className="login-label mb-4 block font-bold text-gray-700"
@@ -105,14 +105,16 @@ const Login: React.FC = () => {
             </div>
             <button
               type="submit"
-              id="login"
-              className="rounded-2xl text-xl block w-full mt-8 mb-4 py-3 px-4 bg-gradient-to-r from-green-400 to-blue-400 hover:from-green-300 hover:to-blue-300 focus:ring-2 focus:ring-green-300 focus:ring-opacity-50 text-white font-medium"
+              className="rounded-2xl text-xl block w-full mt-8 mb-4 py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:brightness-[1.2] focus:ring-2 focus:ring-green-300 focus:ring-opacity-50 text-white font-medium"
             >
               Login
             </button>
             <p className="login-already mt-5 text-center">
               <span>Don't have an account yet?</span>
-              <a href="/register" className="login-login-link text-blue-500">
+              <a
+                href="/register"
+                className="login-login-link ml-2 bg-gradient-to-r from-blue-500 to-purple-500 inline-block bg-clip-text text-transparent font-bold hover:brightness-[1.2] font-semibold text-[17px]"
+              >
                 Register now
               </a>
             </p>

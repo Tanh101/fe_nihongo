@@ -9,7 +9,7 @@
     top: 0;
     z-index: 9;
     background-color: white;
-    opacity: 0.9;
+    opacity: 0.95;
     .login_navbar_logo_container{
         width: 200px;
         height: 70px;
@@ -38,22 +38,19 @@
         .login_button{
             width: 90px;
             height: 50px;
-            border-radius: 10px;
-            background-color: #34D399;
             opacity: 1;
             font-weight: 600;
         }
-        .login_button:hover{
-            background-color: #10B981;}
             
         .register_button{
             width: 120px;
             height: 50px;
-            border-radius: 10px;
-            background-color: #93C5FD;
             font-weight: 600;
+            border: 2px solid; 
+            padding: 10px 20px ;
+            border-image: linear-gradient(to right, #3B82F6, #8B5CF6);
+            border-image-slice: 1;
+            border-radius: 10px;
         }
-        .register_button:hover{
-            background-color: #60A5FA;}
     }
 }
