@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, List, Skeleton, Input } from "antd";
 import "./SearchWordPage.scss";
 import Navbar from "../../components/Navbar/Navbar";

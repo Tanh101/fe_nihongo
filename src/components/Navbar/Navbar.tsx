@@ -48,7 +48,7 @@ const Navbar: React.FC<Props> = (props) => {
       break;
   }
   return (
-    <div className="navbar min-w-min">
+    <div className="navbar min-w-min z-30">
       <div className="navbar_logo_container">
         <img src={Logo} alt="" className="logo_img" />
         <div className="navbar_title">

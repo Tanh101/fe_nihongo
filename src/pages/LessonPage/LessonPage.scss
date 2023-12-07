@@ -4,11 +4,33 @@
         z-index: 5;
         top: 10px;
     }
+    .lesson_page_question_counter{
+        z-index: 5;
+        margin-top: 40px;
+        
+    }
     .lesson_page_content{
         width: 50%;
-        position: absolute;
-        top: 15%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        margin-top: 30px;
+    }
+    .minus_life_text{
+        animation: fade_up 1.25s ease-in-out;
+        opacity: 0;
+    }
+}
+
+@keyframes fade_up
+{
+    0%{
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    50%{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(-60px);
     }
 }

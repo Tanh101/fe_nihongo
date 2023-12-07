@@ -45,20 +45,29 @@
           .landing_page_login_button{
             width: 200px;
             height: 50px;
-            background-color: #10B981;
             border: none;
             border-radius: 5px;
             font-size: 22px;
             margin-right: 20px;
             font-weight: 800;
             cursor: pointer;
-            &:hover{
-              background-color: #059669;
-            }
+            animation: glow 2s infinite;
             &:active{
               scale: 0.97;
             }
           }
         }
       }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.8), 0 0 10px rgba(52, 152, 219, 0.6), 0 0 20px rgba(52, 152, 219, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.8), 0 0 15px rgba(52, 152, 219, 0.6), 0 0 30px rgba(52, 152, 219, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.8), 0 0 10px rgba(52, 152, 219, 0.6), 0 0 20px rgba(52, 152, 219, 0.4);
+  }
 }
