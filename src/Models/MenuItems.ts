@@ -3,7 +3,7 @@ import { faBook, faClipboard, faHome, faSpellCheck, faUser } from "@fortawesome/
 export const MenuItems = [
     {
         title: 'Home',
-        url: 'home',
+        url: '',
         icon: faHome
     },
     {

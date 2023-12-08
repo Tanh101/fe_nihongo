@@ -17,7 +17,7 @@ function Navigate() {
             <div className="flex flex-col w-full">
                 <Navbar></Navbar>
                 <Routes>
-                    <Route path="home" element={<Home />} />
+                    <Route path="" element={<Home />} />
                     <Route path="topic" element={<Topic />} />
                     <Route path="lesson" element={<Lesson />} />
                     <Route path="dicitonary" element={<Dictionary />} />

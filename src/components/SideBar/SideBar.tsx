@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import logo from '../../assets/shibalogo.jpg';
 import { useState } from "react";
-import { MenuItems } from "../../Model/MenuItems"; // Correct the import statement
+import { MenuItems } from "../../Models/MenuItems"; // Correct the import statement
 import { faBars, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 function SideBar() {
