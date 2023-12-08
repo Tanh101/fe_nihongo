@@ -10,8 +10,7 @@ import FlashcardPage from "./pages/FlashcardPage/FlashcardPage";
 import DictionaryPage from "./pages/DictionaryPage/DictionaryPage";
 import "font-awesome/css/font-awesome.min.css";
 import LessonPage from "./pages/LessonPage/LessonPage";
-import { ToastContainer } from 'react-toastify';
-import Lesson from "./components/Dashboard/Lesson/Lesson";
+import { ToastContainer } from "react-toastify";
 import WordDetailPage from "./pages/WordDetailPage/WordDetailPage";
 import Navigate from "./components/Navigate/Navigate";
 

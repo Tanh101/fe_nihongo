@@ -43,18 +43,12 @@ const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
   };
   const handleStartLesson = () => {
     props.setOpenLesson(false);
-    setTimeout(() => {
-      props.setLoading(true);
-    }, 200);
-    setTimeout(() => {
-      props.setLoading(false);
-      navigate("/Lessons/" + props.lessonId);
-    }, 4000);
+    navigate("/Lessons/" + props.lessonId);
   };
   const progressBarClass = props.isLastInChapter
     ? "hidden"
     : props.lessonStatus === "finished"
-    ? "lesson_progress_vertical_bar absolute mt-[87px] left-[58px] w-[4px] h-[35px] bg-green-400 z-10"
+    ? "lesson_progress_vertical_bar absolute mt-[87px] left-[58px] w-[4px] h-[35px] bg-green-500 z-10"
     : "lesson_progress_vertical_bar absolute mt-[87px] left-[58px] w-[4px] h-[35px] bg-gray-300 z-10";
 
   const imgClass =
@@ -139,7 +133,7 @@ const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
           <div className={progressBarClass}></div>
           <FontAwesomeIcon
             icon={faCircleCheck}
-            style={{ color: "#41c863" }}
+            style={{ color: "#22c55e" }}
             className={checkIconClass}
             size="xl"
           />

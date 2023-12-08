@@ -65,7 +65,7 @@ function Register() {
             />
             <button
               type="submit"
-              className="rounded-2xl text-xl block w-full mt-8 mb-4 py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:brightness-[1.2] focus:ring-2 focus:ring-green-300 focus:ring-opacity-50 text-white font-medium"
+              className="button2 rounded-2xl text-xl block w-full mt-8 mb-4 py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:brightness-[1.2] focus:ring-2 focus:ring-green-300 focus:ring-opacity-50 text-white font-medium"
             >
               Register
             </button>

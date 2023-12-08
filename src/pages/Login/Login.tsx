@@ -15,14 +15,13 @@ const Login: React.FC = () => {
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
-    console.log(formData.get("email"));
     await customAxios
       .post("/auth/login", formData)
       .then((res) => {
         if (res.status === 200) {
           Toastify.success("Login successfully");
           const token = res.data.access_token;
-          localStorage.setItem("token", token);
+          localStorage.setItem("access_token", token);
 
           const role = res.data.user.role;
 
@@ -105,7 +104,7 @@ const Login: React.FC = () => {
             </div>
             <button
               type="submit"
-              className="rounded-2xl text-xl block w-full mt-8 mb-4 py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:brightness-[1.2] focus:ring-2 focus:ring-green-300 focus:ring-opacity-50 text-white font-medium"
+              className="button2 rounded-2xl text-xl block w-full mt-8 mb-4 py-3 px-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:brightness-[1.2] focus:ring-2 focus:ring-green-300 focus:ring-opacity-50 text-white font-medium"
             >
               Login
             </button>

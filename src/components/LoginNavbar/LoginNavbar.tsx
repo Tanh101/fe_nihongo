@@ -28,16 +28,16 @@ const LoginNavbar: React.FC<Props> = (props) => {
       ) : (
         <div className="login_navbar_buttons_container">
           <button
-            className="login_button bg-gradient-to-r from-blue-500 to-purple-500 hover:brightness-[1.2] text-white"
+            className="login_button button2 bg-gradient-to-r from-blue-500 to-purple-500 hover:brightness-[1.2] text-white"
             onClick={handleLoginClick}
           >
             Log In
           </button>
           <button
-            className="register_button rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 inline-block bg-clip-text text-transparent font-bold hover:brightness-[1.2]"
+            className="register_button button1 bg-gradient-to-r from-blue-500 to-purple-500 inline-block bg-clip-text text-transparent font-bold hover:brightness-[1.2]"
             onClick={handleRegisterClick}
           >
-            Register
+            <span className="button-content">Register</span>
           </button>
         </div>
       )}
