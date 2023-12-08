@@ -1,14 +1,17 @@
 import "./DictionaryPage.scss";
 import Navbar from "../../components/Navbar/Navbar";
 import WordSearch from "../../components/WordSearch/WordSearch";
+import LoadingShiba from "../../components/Loading/LoadingShiba";
 
 function DictionaryPage() {
 
   return (
     <div className="page_container">
+      {/* <LoadingShiba /> */}
+
       <Navbar active_category="search_word" />
       <div className="search_word_page_content bg-gray-100">
-        <WordSearch input=''/>
+        <WordSearch input='' />
       </div>
     </div>
   );

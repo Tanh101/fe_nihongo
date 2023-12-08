@@ -5,25 +5,26 @@ import { faMagnifyingGlass, faPenToSquare } from '@fortawesome/free-solid-svg-ic
 import DrawCanva from '../DrawCanva/DrawCanva';
 import customAxios from '../../api/AxiosInstance';
 import { Link } from 'react-router-dom';
+import { Word } from '../Definition';
 
-interface SuggestionMeaning {
-    id: number;
-    word_id: number;
-    meaning: string;
-    example: string;
-    example_meaning: string;
-    image: string | null;
-    created_at: string;
-    updated_at: string;
-}
+// interface SuggestionMeaning {
+//     id: number;
+//     word_id: number;
+//     meaning: string;
+//     example: string;
+//     example_meaning: string;
+//     image: string | null;
+//     created_at: string;
+//     updated_at: string;
+// }
 
-interface Suggestion {
-    id: number;
-    word: string;
-    pronunciation: string;
-    sino_vietnamese: string;
-    means: SuggestionMeaning[];
-}
+// interface Suggestion {
+//     id: number;
+//     word: string;
+//     pronunciation: string;
+//     sino_vietnamese: string;
+//     means: SuggestionMeaning[];
+// }
 
 interface WordSearchProps {
     input?: string;
@@ -33,7 +34,7 @@ const WordSearch: React.FC<WordSearchProps> = ({ input = '' }) => {
 
     const [openModal, setOpenModal] = useState(false);
     const [inputValue, setInputValue] = useState(input);
-    const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+    const [suggestions, setSuggestions] = useState<Word[]>([]);
     const [isInputFocused, setIsInputFocused] = useState(false);
     const [timer, setTimer] = useState<number | null>(null);
 
@@ -94,7 +95,7 @@ const WordSearch: React.FC<WordSearchProps> = ({ input = '' }) => {
                     </div>
                     <input type="text"
                         id="voice-search"
-                        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full ps-10 p-2.5" placeholder="Search Word"
+                        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-violet-500 focus:border-violet-500 block w-full ps-10 p-2.5" placeholder="Search Word"
                         value={inputValue}
                         onFocus={() => setIsInputFocused(true)}
                         onBlur={onBlurHandler}
@@ -132,7 +133,7 @@ const WordSearch: React.FC<WordSearchProps> = ({ input = '' }) => {
                         )}
                     </div>
                 </div>
-                <button type="submit" className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-emerald-500 rounded-lg border border-emerald-500 hover:bg-emerald-600 focus:ring-4 focus:outline-none focus:ring-emerald-300">
+                <button type="submit" className="inline-flex items-center py-2.5 px-3 ms-2 text-sm font-medium text-white bg-violet-500 rounded-lg border border-violet-500 hover:bg-violet-600 focus:ring-4 focus:outline-none focus:ring-violet-300">
                     <svg className="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                     </svg>Search
