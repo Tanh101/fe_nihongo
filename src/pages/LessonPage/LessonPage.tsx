@@ -1,64 +1,92 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./LessonPage.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { questions } from "../../components/DummyData";
 import Question from "../../components/Question/Question";
 import Heart from "../../components/Heart/Heart";
 import { Modal, Progress } from "antd";
 import Explenation from "../../components/Explenation/Explenation";
 import ShibaCry from "../../assets/shiba_cry.png";
-import { japaneseLessons1, japaneseLessons2 } from "../../components/DummyData";
+import customAxios from "../../api/AxiosInstance";
+import { Vocabulary } from "../../components/Definition";
+import LoadingShiba from "../../components/Loading/LoadingShiba";
+import VocabularyComponent from "../../components/VocabularyComponent/VocabularyComponent";
 
 const LessonPage = () => {
   const navigate = useNavigate();
   const { lessonId } = useParams();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [lives, setLives] = useState(3);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showExplenation, setShowExplenation] = useState(false);
   const [answersClickable, setAnswersClickable] = useState(true);
   const [failed, setFailed] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(true);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [vocabularies, setVocabularies] = useState<Vocabulary[]>([]);
+  const [currentVocabularyIndex, setCurrentVocabularyIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [showQuestion, setShowQuestion] = useState(false);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+  const [proggress, setProggress] = useState(0);
+
+  const [loading, setLoading] = useState(false);
   const handleOk = () => {
     setIsModalOpen(false);
     navigate("/Learn");
   };
+  async function getVocabularies() {
+    setLoading(true);
+    await customAxios.get(`/lessons/${lessonId}`).then((res) => {
+      setVocabularies(res.data.lesson.vocabularies);
+      setTotalQuestions(countTotalQuestions(vocabularies));
+      setLoading(false);
+    });
+  }
+  useEffect(() => {
+    getVocabularies();
+  }, []);
+
+  useEffect(() => {
+    console.log(vocabularies);
+  }, [vocabularies]);
+
+  const countTotalQuestions = (vocabularies: Vocabulary[]) => {
+    return vocabularies.reduce((total, vocabulary) => {
+      return total + vocabulary.questions.length;
+    }, 0);
+  };
 
   const handleModalCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleNext = () => {
+    if (showQuestion) {
+      // If the last question of the current vocabulary is shown, move to the next vocabulary
+      if (
+        currentQuestionIndex >=
+        vocabularies[currentVocabularyIndex].questions.length - 1
+      ) {
+        setCurrentVocabularyIndex((prevIndex) => prevIndex + 1);
+        setCurrentQuestionIndex(0);
+      } else {
+        // Otherwise, move to the next question
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+        setAnswersClickable(true);
+      }
+    } else {
+      setShowQuestion(true);
+      setAnswersClickable(true); // Switch to showing the first question
+    }
   };
   const handleAnswer = () => {
     if (isCorrect === false) {
       setLives((prevCount) => Math.max(prevCount - 1, 0));
       setShowExplenation(true);
     } else {
-      if (currentQuestionIndex < questions.length - 1) {
-        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-        setAnswersClickable(true);
-      } else {
-        const lessonIndex1 = japaneseLessons1.findIndex(
-          (lesson) => lesson.id === Number(lessonId)
-        );
-        const lessonIndex2 = japaneseLessons1.findIndex(
-          (lesson) => lesson.id === Number(lessonId)
-        );
-        if (lessonIndex1 !== -1) {
-          japaneseLessons1[lessonIndex1].status = "finished";
-          if (lessonIndex1 < japaneseLessons1.length - 1) {
-            if (japaneseLessons1[lessonIndex1 + 1].status !== "finished")
-              japaneseLessons1[lessonIndex1 + 1].status = "unlocked";
-          } else japaneseLessons2[0].status = "unlocked";
-          navigate("/Learn");
-        } else if (lessonIndex2 !== -1) {
-          japaneseLessons2[lessonIndex2].status = "finished";
-          if (lessonIndex2 < japaneseLessons2.length - 1)
-            japaneseLessons2[lessonIndex2 + 1].status = "unlocked";
-          navigate("/Learn");
-        }
-      }
+      handleNext();
     }
+    setProggress((prevProggress) => prevProggress + 1);
   };
   const handleLessonCancel = () => {
     setIsModalOpen(true);
@@ -69,7 +97,7 @@ const LessonPage = () => {
     if (lives === 0) {
       setFailed(true);
     } else {
-      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      handleNext();
       setAnswersClickable(true);
     }
   };
@@ -95,25 +123,40 @@ const LessonPage = () => {
       )}
       <div className="lesson_page_question_counter w-[600px] h-16 flex flex-row justify-center items-center text-xl font-semibold">
         <Progress
-          percent={Math.round(
-            ((currentQuestionIndex + 1) / questions.length) * 100
-          )}
+          percent={Math.round((proggress / totalQuestions) * 100)}
           showInfo={false}
           strokeColor={"#10B981"}
           strokeWidth={12}
         />
       </div>
-      <div className="lesson_page_content min-w-min h-[80%] min-h-[450px] mt-20">
-        <Question
-          question={questions[currentQuestionIndex]}
-          onAnswerClick={handleAnswer}
-          answersClickable={answersClickable}
-          setAnswersClickable={setAnswersClickable}
-        />
+      <div className="lesson_page_content min-w-min h-[80%] min-h-[450px] mt-20 flex flex-col items-center justify-start p-10">
+        {vocabularies?.length > 0 && !showQuestion && (
+          <VocabularyComponent
+            word={vocabularies[currentVocabularyIndex].word}
+            handleNext={handleNext}
+          />
+        )}
+
+        {vocabularies?.length > 0 && showQuestion && (
+          <Question
+            question={
+              vocabularies[currentVocabularyIndex].questions[
+                currentQuestionIndex
+              ]
+            }
+            onAnswerClick={handleAnswer}
+            answersClickable={answersClickable}
+            setAnswersClickable={setAnswersClickable}
+            setIsCorrect={setIsCorrect}
+            lessonId={Number(lessonId)}
+          />
+        )}
       </div>
       <Modal
         okButtonProps={{
-          style: { background: "linear-gradient(to right, #3B82F6, #8B5CF6)" },
+          style: {
+            background: "linear-gradient(to right, #3B82F6, #8B5CF6)",
+          },
           onMouseOver: (event) => {
             event.currentTarget.style.opacity = "0.8";
             event.currentTarget.style.borderColor = "#60A5FA";
@@ -180,6 +223,7 @@ const LessonPage = () => {
           </p>
         </div>
       </Modal>
+      {loading && <LoadingShiba />}
     </div>
   );
 };

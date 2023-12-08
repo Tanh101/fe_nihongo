@@ -1,12 +1,20 @@
 import { useState } from "react";
 import "./Learn.scss";
 import Navbar from "../../components/Navbar/Navbar";
-import { japaneseLessons1 } from "../../components/DummyData";
-import { japaneseLessons2 } from "../../components/DummyData";
 import Chapter from "../../components/Chapter/Chapter";
 import LoadingShiba from "../../components/Loading/LoadingShiba";
+import customAxios from "../../api/AxiosInstance";
+import { Topic } from "../../components/Definition";
 function Learn() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  async function getTopics() {
+    await customAxios.get("/topics").then((res) => {
+      setTopics(res.data.topics);
+    });
+    setLoading(false);
+  }
+  getTopics();
   return (
     <div className="page_container relative">
       <Navbar active_category="learn"></Navbar>
@@ -17,18 +25,15 @@ function Learn() {
           </p>
         </div>
         <div className="lessons_list flex flex-col ">
-          <Chapter
-            lessons={japaneseLessons1}
-            chapterNumber={1}
-            loading={loading}
-            setLoading={setLoading}
-          ></Chapter>
-          <Chapter
-            lessons={japaneseLessons2}
-            chapterNumber={2}
-            loading={loading}
-            setLoading={setLoading}
-          ></Chapter>
+          {topics.map((topic, index) => (
+            <Chapter
+              key={index}
+              lessons={topic?.lessons}
+              chapterNumber={index + 1}
+              loading={loading}
+              setLoading={setLoading}
+            />
+          ))}
         </div>
       </div>
       {loading && <LoadingShiba />}

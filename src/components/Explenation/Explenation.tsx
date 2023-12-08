@@ -1,7 +1,7 @@
 import React from "react";
 import "./Explenation.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 interface ExplenationProps {
   handleClose: () => void;
   explenationText: string;
@@ -27,7 +27,8 @@ const Explenation: React.FC<ExplenationProps> = (props) => {
           className="next_button w-[130px] h-[50px] rounded-full bg-blue-500 text-white fixed right-24 bottom-36 hover:bg-blue-400"
           onClick={handleNext}
         >
-          Continue
+          Continue &nbsp;
+          <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffffff" }} />
         </button>
       </div>
     </div>

@@ -9,7 +9,6 @@ interface QuestionProps {
   answersClickable: boolean;
   setAnswersClickable: (value: boolean) => void;
   setIsCorrect: (value: boolean) => void;
-  lessonId: number;
 }
 
 const Question: React.FC<QuestionProps> = ({
@@ -18,14 +17,10 @@ const Question: React.FC<QuestionProps> = ({
   answersClickable,
   setAnswersClickable,
   setIsCorrect,
-  lessonId,
 }) => {
-  async function handleAnswerClick(answer_id: number) {
+  async function handleAnswerClick(answer: string) {
     if (answersClickable) {
-      const formData = new FormData();
-      formData.append("answer_id", answer_id.toString());
-      formData.append("question_id", question.id.toString());
-      await customAxios.patch(`/check/${lessonId}`, formData).then((res) => {
+      await customAxios.post(`/check/${question.id}`, answer).then((res) => {
         if (res.data.message === "Correct answer") {
           setIsCorrect(true);
         } else {
@@ -50,7 +45,7 @@ const Question: React.FC<QuestionProps> = ({
           <div
             key={answer.id}
             className={answerClass}
-            onClick={async () => handleAnswerClick(answer.id)}
+            onClick={async () => handleAnswerClick(answer.content)}
           >
             <p>{answer.content}</p>
           </div>
