@@ -10,11 +10,10 @@ import FlashcardPage from "./pages/FlashcardPage/FlashcardPage";
 import DictionaryPage from "./pages/DictionaryPage/DictionaryPage";
 import "font-awesome/css/font-awesome.min.css";
 import LessonPage from "./pages/LessonPage/LessonPage";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Topic from "./pages/Dashboard/Topic/Topic";
 import { ToastContainer } from 'react-toastify';
-import Lesson from "./pages/Dashboard/Lesson/Lesson";
+import Lesson from "./components/Dashboard/Lesson/Lesson";
 import WordDetailPage from "./pages/WordDetailPage/WordDetailPage";
+import Navigate from "./components/Navigate/Navigate";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Router>
@@ -27,10 +26,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Route path="/flashcard" element={<FlashcardPage />} />
       <Route path="/dictionary" element={<DictionaryPage />} />
       <Route path="/lessons/:lessonId" element={<LessonPage />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/topics" element={<Topic />} />
-      <Route path="/lessons" element={<Lesson />} />
       <Route path="/dictionary/:word" element={<WordDetailPage />} />
+      <Route path="/dashboard/*" element={<Navigate />} />
     </Routes>
     <ToastContainer />
   </Router>
