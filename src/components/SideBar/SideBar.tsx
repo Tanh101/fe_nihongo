@@ -7,7 +7,7 @@ import { faBars, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 function SideBar() {
     const [isShow, setIsShow] = useState<boolean>(true);
-    const [active, setActive] = useState<string>("Home");
+    const [active, setActive] = useState<string>("");
 
     const handleShowSidebar = () => {
         setIsShow(!isShow);
