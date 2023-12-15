@@ -1,0 +1,29 @@
+.learn_flashcard_page_container{
+    .learn_flashcard_page_content{
+        height: 100vh;
+        width: 100%;
+        padding-top: 110px;
+        .learn_flashcard_page_title_container{
+            padding-bottom: 5px;
+            margin-top: 5px;
+            .flashcard_page_title{
+            width: 250px;}
+        }
+        .learn_flashcard_page_content_container{
+            width: 64%;
+            height: 650px;
+        }
+    }
+}
+
+
+.flash_card_collection_item{
+    box-shadow: 0 0.125rem 0.25rem #00000014;
+}
+
+.user_avatar{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    
+}

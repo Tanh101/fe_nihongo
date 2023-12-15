@@ -1,4 +1,56 @@
 .flipped{
-    transform: rotateY(180deg);
+    transform: rotateX(-180deg);
+    transition: transform 0.325s ease-out;
+}
+
+.unflipped{
+    transform: rotateX(0deg);
+    transition: transform 0.325s ease-out;
+}
+
+.flash_card_instance_container{
+    box-shadow: 0 0.25rem 1rem 0 #2e385614;}
+
+.definition_container{
+    transform-style: preserve-3d;
     transition: transform 0.5s;
 }
+.unflip_text{
+    transform: rotateX(0deg);
+}
+
+.flip_text{
+    transform: rotateX(180deg);
+}
+
+.new_next{
+    animation: slideFromRight 0.2s ease-out;
+}
+.new_previous{
+    animation: slideFromLeft 0.2s ease-out ;
+}
+
+@keyframes slideFromRight {
+    0% {
+      transform: translate3d(35%, 1%, 0);
+    }
+    50% {
+        transform: translate3d(5%, -0.2%, 0);
+    }
+    100%{
+        transform: translate3d(0, 0, 0);
+    
+    }
+  }
+  @keyframes slideFromLeft {
+    0% {
+        transform: translate3d(-35%, 1%, 0);
+      }
+      50% {
+          transform: translate3d(-5%, -0.2%, 0);
+      }
+      100%{
+          transform: translate3d(0, 0, 0);
+      
+      }
+  }

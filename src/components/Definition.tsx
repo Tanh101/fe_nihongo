@@ -26,15 +26,15 @@ export type JapaneseLesson = {
 };
 
 export type FlashCardInstance = {
-  id: number;
-  kanji: string;
+  id: string;
+  word: string;
   definition: string;
-  hiragana: string;
 };
 
 export type FlashCardDeck = {
-  id: number;
+  id: string;
   name: string;
+  description: string;
   flashCardInstances: FlashCardInstance[];
 };
 

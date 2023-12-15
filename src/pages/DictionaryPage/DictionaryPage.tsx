@@ -8,7 +8,7 @@ function DictionaryPage() {
       {/* <LoadingShiba /> */}
 
       <Navbar active_category="search_word" />
-      <div className="search_word_page_content bg-gray-100">
+      <div className="search_word_page_content bg-[#F6F7FB]">
         <WordSearch input="" />
       </div>
     </div>

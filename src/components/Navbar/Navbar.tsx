@@ -13,6 +13,7 @@ import {
 interface Props {
   active_category: string;
 }
+import TextLogo from "../../assets/shiba_sensei_logo.png";
 
 const Navbar: React.FC<Props> = (props) => {
   const navigate = useNavigate();
@@ -47,13 +48,21 @@ const Navbar: React.FC<Props> = (props) => {
       DictionaryActive = true;
       break;
   }
+  const handleLogoClick = () => {
+    navigate("/learn");
+  };
   return (
     <div className="navbar min-w-min z-30">
-      <div className="navbar_logo_container">
+      <div
+        className="navbar_logo_container cursor-pointer"
+        onClick={handleLogoClick}
+      >
         <img src={Logo} alt="" className="logo_img" />
-        <div className="navbar_title">
-          <span>Shiba Sensei</span>
-        </div>
+        <img
+          src={TextLogo}
+          alt=""
+          className="text_logo_img object-fit w-[130px] h-[35px]"
+        />
       </div>
       <div className="navbar_buttons_container">
         <button

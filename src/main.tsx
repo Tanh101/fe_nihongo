@@ -13,6 +13,9 @@ import LessonPage from "./pages/LessonPage/LessonPage";
 import { ToastContainer } from "react-toastify";
 import WordDetailPage from "./pages/WordDetailPage/WordDetailPage";
 import Navigate from "./components/Navigate/Navigate";
+import CreateFlashcardPage from "./pages/FlashcardPage/CreateFlashCardPage";
+import LearnFlashCardPage from "./pages/FlashcardPage/LearnFlashCardPage";
+import EditFlashcardPage from "./pages/FlashcardPage/EditFlashCardPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Router>
@@ -27,6 +30,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Route path="/lessons/:lessonId" element={<LessonPage />} />
       <Route path="/dictionary/:word" element={<WordDetailPage />} />
       <Route path="/dashboard/*" element={<Navigate />} />
+      <Route path="/create_flashcard" element={<CreateFlashcardPage />} />
+      <Route
+        path="/flashcard/:flashCardDeckId"
+        element={<LearnFlashCardPage />}
+      />
+      <Route
+        path="edit_flashcard/:flashCardDeckId"
+        element={<EditFlashcardPage />}
+      />
     </Routes>
     <ToastContainer />
   </Router>
