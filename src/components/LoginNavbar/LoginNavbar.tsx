@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/shibalogo.jpg";
 import "./LoginNavbar.scss";
+import TextLogo from "../../assets/shiba_sensei_logo.png";
 
 interface Props {
   landingPage: boolean;
@@ -19,9 +20,11 @@ const LoginNavbar: React.FC<Props> = (props) => {
     <div className="login_navbar">
       <div className="login_navbar_logo_container">
         <img src={Logo} alt="" className="logo_img" />
-        <div className="login_nav_bar_title">
-          <span>Shiba Sensei</span>
-        </div>
+        <img
+          src={TextLogo}
+          alt=""
+          className="text_logo_img object-fit w-[130px] h-[35px]"
+        />
       </div>
       {props.landingPage ? (
         <div></div>

@@ -1,15 +1,12 @@
 import React from "react";
 import "./Question.scss";
 import { QuestionType } from "../Definition";
-import customAxios from "../../api/AxiosInstance";
 
 interface QuestionProps {
   question: QuestionType;
-  onAnswerClick: () => void;
+  onAnswerClick: (answerId: number, questionId: number) => void;
   answersClickable: boolean;
   setAnswersClickable: (value: boolean) => void;
-  setIsCorrect: (value: boolean) => void;
-  lessonId: number;
 }
 
 const Question: React.FC<QuestionProps> = ({
@@ -17,23 +14,12 @@ const Question: React.FC<QuestionProps> = ({
   onAnswerClick,
   answersClickable,
   setAnswersClickable,
-  setIsCorrect,
-  lessonId,
 }) => {
-  async function handleAnswerClick(answer_id: number) {
+  function handleAnswerClick(answerId: number) {
     if (answersClickable) {
-      const formData = new FormData();
-      formData.append("answer_id", answer_id.toString());
-      formData.append("question_id", question.id.toString());
-      await customAxios.patch(`/check/${lessonId}`, formData).then((res) => {
-        if (res.data.message === "Correct answer") {
-          setIsCorrect(true);
-        } else {
-          setIsCorrect(false);
-        }
-        onAnswerClick();
-      });
-    } else setAnswersClickable(false);
+      onAnswerClick(answerId, question.id);
+    }
+    setAnswersClickable(false);
   }
   const answerClass = answersClickable
     ? "border-solid border-2 border-gray-300 p-4 rounded-2xl cursor-pointer hover:bg-[#F3F8FE] text-[16px] flex flex-row items-center justify-center"
@@ -50,7 +36,7 @@ const Question: React.FC<QuestionProps> = ({
           <div
             key={answer.id}
             className={answerClass}
-            onClick={async () => handleAnswerClick(answer.id)}
+            onClick={() => handleAnswerClick(answer.id)}
           >
             <p>{answer.content}</p>
           </div>

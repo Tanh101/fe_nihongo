@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Learn.scss";
 import Navbar from "../../components/Navbar/Navbar";
 import Chapter from "../../components/Chapter/Chapter";
@@ -14,7 +14,9 @@ function Learn() {
     });
     setLoading(false);
   }
-  getTopics();
+  useEffect(() => {
+    getTopics();
+  }, []);
   return (
     <div className="page_container relative">
       <Navbar active_category="learn"></Navbar>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./LessonPage.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faMedal, faXmark } from "@fortawesome/free-solid-svg-icons";
 import Question from "../../components/Question/Question";
 import Heart from "../../components/Heart/Heart";
 import { Modal, Progress } from "antd";
@@ -21,13 +21,14 @@ const LessonPage = () => {
   const [showExplenation, setShowExplenation] = useState(false);
   const [answersClickable, setAnswersClickable] = useState(true);
   const [failed, setFailed] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
   const [vocabularies, setVocabularies] = useState<Vocabulary[]>([]);
   const [currentVocabularyIndex, setCurrentVocabularyIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showQuestion, setShowQuestion] = useState(false);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [proggress, setProggress] = useState(0);
+  const [finished, setFinished] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState("");
 
   const [loading, setLoading] = useState(false);
   const handleOk = () => {
@@ -39,6 +40,7 @@ const LessonPage = () => {
     await customAxios.get(`/lessons/${lessonId}`).then((res) => {
       setVocabularies(res.data.lesson.vocabularies);
       setTotalQuestions(countTotalQuestions(vocabularies));
+      console.log("total question:" + countTotalQuestions(vocabularies));
       setLoading(false);
     });
   }
@@ -62,13 +64,17 @@ const LessonPage = () => {
 
   const handleNext = () => {
     if (showQuestion) {
-      // If the last question of the current vocabulary is shown, move to the next vocabulary
       if (
         currentQuestionIndex >=
         vocabularies[currentVocabularyIndex].questions.length - 1
       ) {
-        setCurrentVocabularyIndex((prevIndex) => prevIndex + 1);
-        setCurrentQuestionIndex(0);
+        if (currentVocabularyIndex >= vocabularies.length - 1) {
+          setFinished(true);
+        } else {
+          setShowQuestion(false);
+          setCurrentVocabularyIndex((prevIndex) => prevIndex + 1);
+          setCurrentQuestionIndex(0);
+        }
       } else {
         // Otherwise, move to the next question
         setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
@@ -79,14 +85,20 @@ const LessonPage = () => {
       setAnswersClickable(true); // Switch to showing the first question
     }
   };
-  const handleAnswer = () => {
-    if (isCorrect === false) {
-      setLives((prevCount) => Math.max(prevCount - 1, 0));
-      setShowExplenation(true);
-    } else {
-      handleNext();
-    }
-    setProggress((prevProggress) => prevProggress + 1);
+  const handleAnswer = async (answerId: number, questionId: number) => {
+    const formData = new FormData();
+    formData.append("answer", answerId.toString());
+    formData.append("question_id", questionId.toString());
+    await customAxios.patch(`/check/${lessonId}`, formData).then((res) => {
+      if (res.data.message === "Correct answer") {
+        handleNext();
+      } else {
+        setCorrectAnswer(res.data.correct_answer);
+        setLives((prevCount) => Math.max(prevCount - 1, 0));
+        setShowExplenation(true);
+      }
+      setProggress((prevProggress) => prevProggress + 1);
+    });
   };
   const handleLessonCancel = () => {
     setIsModalOpen(true);
@@ -107,8 +119,13 @@ const LessonPage = () => {
     navigate("/Learn");
   };
 
+  const handleFinish = () => {
+    setFinished(false);
+    navigate("/Learn");
+  };
+
   return (
-    <div className="lesson_page_container w-full h-full flex flex-col items-center">
+    <div className="lesson_page_container w-full h-full flex flex-col items-center bg-[#F6F7FB]">
       <button
         className="cancel_button w-[50px] h-[50px] rounded-full border-solid border-2 border-gray-300 fixed hover:bg-gray-200 top-4 right-4 flex flex-row items-center justify-center"
         onClick={handleLessonCancel}
@@ -147,8 +164,6 @@ const LessonPage = () => {
             onAnswerClick={handleAnswer}
             answersClickable={answersClickable}
             setAnswersClickable={setAnswersClickable}
-            setIsCorrect={setIsCorrect}
-            lessonId={Number(lessonId)}
           />
         )}
       </div>
@@ -178,7 +193,7 @@ const LessonPage = () => {
       {showExplenation ? (
         <Explenation
           handleClose={handleCloseExplenation}
-          correctAnswer={"Correct Answer: ABC"}
+          correctAnswer={correctAnswer}
           explenationText={"Because its easy"}
         />
       ) : null}
@@ -220,6 +235,51 @@ const LessonPage = () => {
           />
           <p className="text-xl font-semibold w-full h-[20px] flex flex-row items-center justify-center mb-[100px] ">
             Please try again
+          </p>
+        </div>
+      </Modal>
+      <Modal
+        okButtonProps={{
+          style: {
+            background: "linear-gradient(to right, #3B82F6, #8B5CF6)",
+            width: "120px",
+            height: "40px",
+            fontSize: "16px",
+            borderRadius: "10px",
+          },
+          onMouseOver: (event) => {
+            event.currentTarget.style.opacity = "0.8";
+            event.currentTarget.style.borderColor = "#60A5FA";
+          },
+          onMouseLeave: (event) => {
+            event.currentTarget.style.opacity = "1";
+            event.currentTarget.style.borderColor = "#ffffff";
+          },
+        }}
+        title={
+          <div className="w-full h-[50px] flex flex-row items-center justify-center text-2xl font-semibold mt-[20px]">
+            You have finished the lesson{" "}
+            <FontAwesomeIcon
+              icon={faMedal}
+              size="xl"
+              className="text-yellow-500 ml-2"
+            />
+          </div>
+        }
+        open={finished}
+        onOk={handleFinish}
+        closable={false}
+        cancelButtonProps={{ style: { display: "none" } }}
+        okText="Finish"
+      >
+        <div className="w-full h-[300px] flex flex-col items-center justify-center mt-[50px]">
+          <img
+            src={ShibaCry}
+            alt="shiba cry"
+            className="w-[60%] h-[300px] object-cover pr-[15px]"
+          />
+          <p className="text-xl font-semibold w-full h-[20px] flex flex-row items-center justify-center mb-[100px] ">
+            Congratulations!
           </p>
         </div>
       </Modal>
