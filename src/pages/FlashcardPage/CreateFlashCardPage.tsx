@@ -8,11 +8,13 @@ import {
   faPlus,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
-import { FlashCardDeck, FlashCardInstance } from "../../components/Definition";
+import { FlashCardInstance } from "../../components/Definition";
 import { useNavigate } from "react-router-dom";
 import { Toastify } from "../../toastify/Toastify";
 import { v4 as uuidv4 } from "uuid";
 import * as ExcelJS from "exceljs";
+import customAxios from "../../api/AxiosInstance";
+import LoadingShiba from "../../components/Loading/LoadingShiba";
 
 interface RowComponentProps {
   data: FlashCardInstance;
@@ -121,6 +123,7 @@ function CreateFlashcardPage() {
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [isFileUploaded, setIsFileUploaded] = useState<boolean>(false);
   const [fileName, setFileName] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleInputChange = (
     field: keyof FlashCardInstance,
@@ -170,7 +173,7 @@ function CreateFlashcardPage() {
     }
   };
 
-  const handleCreate = () => {
+  const handleCreate = async (e: React.FormEvent) => {
     if (title === "") {
       Toastify.error("Please enter a title !");
       return;
@@ -181,20 +184,23 @@ function CreateFlashcardPage() {
         return;
       }
     }
-    const existingFlashcards = JSON.parse(
-      localStorage.getItem("flashcard") || "[]"
-    );
-    const newFlashCard: FlashCardDeck = {
-      id: uuidv4(),
-      name: title,
-      description: description,
-      flashCardInstances: rows,
-    };
-    const updatedFlashcards = [...existingFlashcards, newFlashCard];
-    localStorage.setItem("flashcard", JSON.stringify(updatedFlashcards));
-    resetFields();
-    Toastify.success(`Deck "${newFlashCard?.name}" created successfully`);
-    navigate("/flashcard");
+    e.preventDefault();
+    await customAxios
+      .post("/flashcard", {
+        name: title,
+        description: description,
+        cards: rows,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          Toastify.success("Create flashcard successfully");
+          resetFields();
+          navigate("/flashcard");
+        } else {
+          Toastify.error("Create flashcard failed");
+          return;
+        }
+      });
   };
 
   const onTitleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -213,6 +219,7 @@ function CreateFlashcardPage() {
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    setLoading(true);
     const file = event.target.files![0];
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -245,6 +252,9 @@ function CreateFlashcardPage() {
       }
     };
     reader.readAsArrayBuffer(file);
+    setTimeout(() => {
+      setLoading(false);
+    }, 200);
   };
   return (
     <div className="create_flashcardpage_container overflow-y-scroll bg-[#F6F7FB]">
@@ -299,6 +309,7 @@ function CreateFlashcardPage() {
               type="text"
               onChange={onTitleInputChange}
               value={title}
+              maxLength={32}
             ></input>
             <textarea
               placeholder="Enter description..."
@@ -307,6 +318,7 @@ function CreateFlashcardPage() {
               typeof="text"
               onChange={onDescriptionInputChange}
               value={description}
+              maxLength={600}
             ></textarea>
             <div className="flashcard_word_input_list w-full mt-8">
               <form className="w-full">
@@ -345,6 +357,7 @@ function CreateFlashcardPage() {
           </div>
         </div>
       </div>
+      {loading && <LoadingShiba />}
     </div>
   );
 }

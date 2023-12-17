@@ -9,11 +9,14 @@ import {
   faGraduationCap,
   faPen,
   faBoltLightning,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 interface Props {
   active_category: string;
 }
 import TextLogo from "../../assets/shiba_sensei_logo.png";
+import { Dropdown } from "antd";
+import type { MenuProps } from "antd";
 
 const Navbar: React.FC<Props> = (props) => {
   const navigate = useNavigate();
@@ -48,9 +51,29 @@ const Navbar: React.FC<Props> = (props) => {
       DictionaryActive = true;
       break;
   }
+
   const handleLogoClick = () => {
     navigate("/learn");
   };
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  const itemsMore: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <button
+          className=" w-full h-[30px] text-[16px] font-semibold text-[#2E3856] flex flex-row items-center justify-center"
+          onClick={handleLogout}
+        >
+          Logout &nbsp;
+          <FontAwesomeIcon icon={faRightFromBracket} className="text-red-500" />
+        </button>
+      ),
+    },
+  ];
   return (
     <div className="navbar min-w-min z-30">
       <div
@@ -108,10 +131,12 @@ const Navbar: React.FC<Props> = (props) => {
           &ensp;Dictionary
         </button>
       </div>
-      <div className="user_account">
-        <img src={UserAvatar} alt="" className="user_avatar" />
-        <span className="user_name">Username</span>
-      </div>
+      <Dropdown trigger={["click"]} menu={{ items: itemsMore }} placement="top">
+        <div className="user_account cursor-pointer">
+          <img src={UserAvatar} alt="" className="user_avatar" />
+          <span className="user_name text-[#2E3856]">Username</span>
+        </div>
+      </Dropdown>
     </div>
   );
 };

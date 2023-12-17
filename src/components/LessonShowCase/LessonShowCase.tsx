@@ -8,6 +8,8 @@ import {
   faPencil,
 } from "@fortawesome/free-solid-svg-icons";
 import { Popconfirm } from "antd";
+import customAxios from "../../api/AxiosInstance";
+import { Toastify } from "../../toastify/Toastify";
 
 interface LessonShowCaseProps {
   lessonName: string;
@@ -21,6 +23,7 @@ interface LessonShowCaseProps {
   setCurrentClickedLesson: (value: number) => void;
   loading: boolean;
   setLoading: (value: boolean) => void;
+  isChapterFinished: boolean;
 }
 
 const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
@@ -41,23 +44,30 @@ const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
     props.setOpenLesson(false);
     props.setCurrentClickedLesson(-1);
   };
-  const handleStartLesson = () => {
+  const handleStartLesson = async () => {
     props.setOpenLesson(false);
-    navigate("/Lessons/" + props.lessonId);
+    await customAxios.post("/learn/" + props.lessonId).then((res) => {
+      if (res.status === 200) {
+        navigate("/Lessons/" + props.lessonId);
+      } else {
+        Toastify.warning("You haven't unlocked this lesson yet!");
+      }
+    });
   };
+
   const progressBarClass = props.isLastInChapter
     ? "hidden"
     : props.lessonStatus === "finished"
-    ? "lesson_progress_vertical_bar absolute mt-[87px] left-[58px] w-[4px] h-[35px] bg-green-500 z-10"
+    ? "lesson_progress_vertical_bar absolute mt-[87px] left-[58px] w-[4px] h-[35px] bg-emerald-500 z-10"
     : "lesson_progress_vertical_bar absolute mt-[87px] left-[58px] w-[4px] h-[35px] bg-gray-300 z-10";
 
   const imgClass =
     props.lessonStatus === "finished"
-      ? "lesson_image object-cover p-[5px] border-solid border-[4px] border-green-500 z-20"
+      ? "lesson_image object-cover p-[5px] border-solid border-[4px] border-emerald-500 z-20"
       : "lesson_image object-cover p-[5px] border-solid border-[4px] border-gray-300 z-20";
   const checkIconClass =
     props.lessonStatus === "finished"
-      ? "lesson_check_icon w-[24px] h-[24px] absolute top-[81px] left-[46px] z-30 bg-white rounded-full border-solid border-2 border-white"
+      ? "lesson_check_icon w-[24px] h-[24px] text-emerald-500 absolute top-[81px] left-[46px] z-30 bg-white rounded-full border-solid border-2 border-white"
       : "hidden";
   const lockIconClass =
     props.lessonStatus === "unlocked"
@@ -67,8 +77,14 @@ const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
       : "lesson_lock_icon absolute top-[34px] left-[45px] z-30 rounded-full ";
   const LessonShowCaseClass =
     props.lessonStatus === "unlocked" || props.lessonStatus === "finished"
-      ? "lesson_showcase relative min-w-min w-4/5 h-28 rounded-2xl flex flex-row justify-between items-center px-4 cursor-pointer hover:bg-[#F3F8FE] mb-2 mt-1"
+      ? "lesson_showcase relative min-w-min w-4/5 h-28 rounded-2xl flex flex-row justify-between items-center px-4 cursor-pointer mb-2 mt-1"
       : "lesson_showcase relative min-w-min w-4/5 h-28 rounded-2xl flex flex-row justify-between items-center px-4 cursor-not-allowed mb-2 mt-1 opacity-[0.5]";
+  const hoverClass = props.isChapterFinished
+    ? "hover:bg-[#d1fae5]"
+    : props.lessonStatus === "unlocked" || props.lessonStatus === "finished"
+    ? "hover:bg-green-100"
+    : "";
+
   return (
     <Popconfirm
       title={
@@ -123,7 +139,10 @@ const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
       }
       color="#ffffff"
     >
-      <div className={LessonShowCaseClass} onClick={handleLessonClick}>
+      <div
+        className={LessonShowCaseClass + " " + hoverClass}
+        onClick={handleLessonClick}
+      >
         <div className="lesson_showcase_content min-w-min w-full flex flex-row">
           <img
             src="https://www.state.gov/wp-content/uploads/2019/04/Japan-2107x1406.jpg"
@@ -133,7 +152,6 @@ const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
           <div className={progressBarClass}></div>
           <FontAwesomeIcon
             icon={faCircleCheck}
-            style={{ color: "#22c55e" }}
             className={checkIconClass}
             size="xl"
           />
@@ -143,11 +161,22 @@ const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
             className={lockIconClass}
             size="2xl"
           />
-          <div className="lesson_showcase_content_description flex flex-col w-10/12 h-24 min-w-min pt-[5px]">
-            <span>
-              <strong>{props.lessonName}</strong>
+          <div className="lesson_showcase_content_description flex flex-col w-10/12 h-24 min-w-min pt-[16px]">
+            <span className="text-[16px] font-semibold">
+              {props.lessonName}
             </span>
-            <p className="text-gray-600">{props.lesssonDescription}</p>
+            <p
+              className={
+                "w-full h-auto max-h-[50px] text-gray-600 text-[14px] overflow-auto"
+              }
+              style={{
+                overflowWrap: "anywhere",
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+              }}
+            >
+              {props.lesssonDescription}
+            </p>
           </div>
         </div>
       </div>

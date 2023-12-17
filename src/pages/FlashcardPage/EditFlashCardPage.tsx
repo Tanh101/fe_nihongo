@@ -3,10 +3,12 @@ import "./EditFlashCardPage.scss";
 import Navbar from "../../components/Navbar/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FlashCardDeck, FlashCardInstance } from "../../components/Definition";
+import { FlashCardInstance } from "../../components/Definition";
 import { useNavigate, useParams } from "react-router-dom";
 import { Toastify } from "../../toastify/Toastify";
 import { v4 as uuidv4 } from "uuid";
+import customAxios from "../../api/AxiosInstance";
+import LoadingShiba from "../../components/Loading/LoadingShiba";
 
 interface RowComponentProps {
   data: FlashCardInstance;
@@ -89,7 +91,10 @@ const RowComponent: React.FC<RowComponentProps> = ({
           className={`${
             isVisible ? "visible_button" : "hidden_button"
           } hidden_add_button w-[35px] h-[35px] rounded-full mt-[-10px] bg-violet-500 hover:bg-violet-400`}
-          onClick={() => handleAddFieldsBetween(index + 1)}
+          onClick={(event) => {
+            event.preventDefault();
+            handleAddFieldsBetween(index);
+          }}
         >
           <FontAwesomeIcon
             icon={faPlus}
@@ -109,28 +114,23 @@ function EditFlashcardPage() {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const deckId = flashCardDeckId as string;
-    const storedFlashcardDecks = JSON.parse(
-      localStorage.getItem("flashcard") || "[]"
-    );
-
-    const selectedDeck = storedFlashcardDecks.find(
-      (deck: FlashCardDeck) => deck.id === deckId
-    );
-
-    if (selectedDeck) {
-      setRows(selectedDeck.flashCardInstances);
-      setTitle(selectedDeck.name);
-      setDescription(selectedDeck.description);
-      if (selectedDeck.flashCardInstances.length > 1) {
+  async function getFlashCardDeck() {
+    await customAxios.get(`/flashcard/${flashCardDeckId}`).then((res) => {
+      const { flashcard } = res.data;
+      setRows(flashcard.cards);
+      setTitle(flashcard.name);
+      setDescription(flashcard.description);
+      if (flashcard.cards.length > 1) {
         setIsDisabled(false);
       }
-    } else {
-      console.error(`Flashcard deck with id ${deckId} not found.`);
-    }
-  }, [flashCardDeckId]);
+      setLoading(false);
+    });
+  }
+  useEffect(() => {
+    getFlashCardDeck();
+  }, []);
 
   const handleInputChange = (
     field: keyof FlashCardInstance,
@@ -170,19 +170,25 @@ function EditFlashcardPage() {
     });
   };
 
-  const handleRemoveFields = (rowId: string) => {
+  const handleRemoveFields = async (rowId: string) => {
     const indexToRemove = rows.findIndex((row) => row.id === rowId);
     if (indexToRemove !== -1) {
-      const updatedRows = [...rows];
-      updatedRows.splice(indexToRemove, 1);
-      setRows(updatedRows);
-      if (updatedRows.length === 1) {
-        setIsDisabled(true);
-      }
+      await customAxios.delete(`/card/${rowId}`).then((res) => {
+        if (res.status === 200) {
+          const updatedRows = [...rows];
+          updatedRows.splice(indexToRemove, 1);
+          setRows(updatedRows);
+          if (updatedRows.length === 1) {
+            setIsDisabled(true);
+          }
+        } else {
+          Toastify.error("Error updating flashcard");
+        }
+      });
     }
   };
 
-  const handleDoneClick = () => {
+  const handleSaveClick = async (e: React.FormEvent) => {
     if (title === "") {
       Toastify.error("Please enter a title!");
       return;
@@ -194,33 +200,23 @@ function EditFlashcardPage() {
         return;
       }
     }
+    e.preventDefault();
 
-    const existingFlashcards = JSON.parse(
-      localStorage.getItem("flashcard") || "[]"
-    );
-
-    // Check if there is an existing flashcard with the same ID
-    const existingFlashcardIndex = existingFlashcards.findIndex(
-      (flashcardeck: FlashCardDeck) => flashcardeck.id === flashCardDeckId
-    );
-
-    if (existingFlashcardIndex !== -1) {
-      const updatedFlashcards = [...existingFlashcards];
-      updatedFlashcards[existingFlashcardIndex] = {
-        id: flashCardDeckId,
+    await customAxios
+      .put(`/flashcard/${flashCardDeckId}`, {
         name: title,
         description: description,
-        flashCardInstances: rows,
-      };
-
-      localStorage.setItem("flashcard", JSON.stringify(updatedFlashcards));
-
-      resetFields();
-      Toastify.success(`Deck "${title}" edited successfully`);
-      navigate("/flashcard");
-    } else {
-      Toastify.error("Flashcard not found for editing");
-    }
+        cards: rows,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          resetFields();
+          Toastify.success("Flashcard updated successfully");
+          navigate("/flashcard");
+        } else {
+          Toastify.error("Error updating flashcard");
+        }
+      });
   };
 
   const onTitleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -240,72 +236,79 @@ function EditFlashcardPage() {
   return (
     <div className="create_flashcardpage_container overflow-y-scroll bg-[#F6F7FB]">
       <Navbar active_category="flashcard"></Navbar>
-      <div className="create_flashcard_page_content w-full h-screen pt-24 flex flex-col items-center justify-start ">
-        <div className="create_flashcard_page_title_container w-[70%] h-[100px] flex flex-row items-center justify-between min-w-max">
-          <p className="create_flashcard_page_title text-2xl font-semibold text-black h-[40px] mt-2">
-            Edit flashcard
-          </p>
-          <button
-            className="create_flashcard_button w-[90px] h-[40px] rounded-xl bg-violet-500 text-white bottom-24 hover:bg-violet-400"
-            onClick={handleDoneClick}
-          >
-            Done
-          </button>
-        </div>
-        <div className="create_flashcards_list w-[70%] h-auto min-w-max mt-10">
-          <div className="flashcard_description_input_container">
-            <input
-              placeholder='Enter title, example "N1 Kanji"'
-              className="title_input w-full h-[50px] rounded-[12px] p-4 bg-white focus:ring-violet-500"
-              type="text"
-              onChange={onTitleInputChange}
-              value={title}
-            ></input>
-            <textarea
-              placeholder="Enter description..."
-              className="w-full h-[120px] rounded-[12px] p-4 mt-5 bg-white focus:ring-violet-500"
-              rows={4}
-              typeof="text"
-              onChange={onDescriptionInputChange}
-              value={description}
-            ></textarea>
-            <div className="flashcard_word_input_list w-full mt-8">
-              <form className="w-full">
-                {rows?.map((row, index) => {
-                  return (
-                    <RowComponent
-                      key={row.id}
-                      data={row}
-                      onChange={handleInputChange}
-                      index={index}
-                      handleRemove={() => handleRemoveFields(row.id)}
-                      isDisabled={isDisabled}
-                      handleAddFieldsBetween={handleAddFieldsBetween}
-                      rowLength={rows.length}
-                    />
-                  );
-                })}
-              </form>
-              <div
-                className="add_button_container w-full h-[100px] flex flex-col items-center justify-center rounded-[12px] p-4 bg-white mb-5 text-[#2E3856] cursor-pointer"
-                onClick={handleAddFields}
+      {loading === false ? (
+        <div>
+          <div className="create_flashcard_page_content w-full h-screen pt-24 flex flex-col items-center justify-start ">
+            <div className="create_flashcard_page_title_container w-[70%] h-[100px] flex flex-row items-center justify-between min-w-max">
+              <p className="create_flashcard_page_title text-2xl font-semibold text-black h-[40px] mt-2">
+                Edit flashcard
+              </p>
+              <button
+                className="create_flashcard_button w-[90px] h-[40px] rounded-xl bg-violet-500 text-white bottom-24 hover:bg-violet-400"
+                onClick={handleSaveClick}
               >
-                <div className="add_flashcard_button h-[30px] pb-5 flex flex-row justify-center items-center mt-5">
-                  <FontAwesomeIcon
-                    icon={faPlus}
-                    size="xs"
-                    className="add_flashcard_icon"
-                  />
-                  &nbsp;{" "}
-                  <p className="font-bold text-[15px] tracking-widest">
-                    ADD CARD
-                  </p>
+                Save
+              </button>
+            </div>
+            <div className="create_flashcards_list w-[70%] h-auto min-w-max mt-10">
+              <div className="flashcard_description_input_container">
+                <input
+                  placeholder='Enter title, example "N1 Kanji"'
+                  className="title_input w-full h-[50px] rounded-[12px] p-4 bg-white focus:ring-violet-500"
+                  type="text"
+                  onChange={onTitleInputChange}
+                  value={title}
+                  maxLength={32}
+                ></input>
+                <textarea
+                  placeholder="Enter description..."
+                  className="w-full h-[120px] rounded-[12px] p-4 mt-5 bg-white focus:ring-violet-500"
+                  rows={4}
+                  typeof="text"
+                  onChange={onDescriptionInputChange}
+                  value={description}
+                  maxLength={600}
+                ></textarea>
+                <div className="flashcard_word_input_list w-full mt-8">
+                  <form className="w-full">
+                    {rows?.map((row, index) => {
+                      return (
+                        <RowComponent
+                          key={row.id}
+                          data={row}
+                          onChange={handleInputChange}
+                          index={index}
+                          handleRemove={() => handleRemoveFields(row.id)}
+                          isDisabled={isDisabled}
+                          handleAddFieldsBetween={handleAddFieldsBetween}
+                          rowLength={rows.length}
+                        />
+                      );
+                    })}
+                  </form>
+                  <div
+                    className="add_button_container w-full h-[100px] flex flex-col items-center justify-center rounded-[12px] p-4 bg-white mb-5 text-[#2E3856] cursor-pointer"
+                    onClick={handleAddFields}
+                  >
+                    <div className="add_flashcard_button h-[30px] pb-5 flex flex-row justify-center items-center mt-5">
+                      <FontAwesomeIcon
+                        icon={faPlus}
+                        size="xs"
+                        className="add_flashcard_icon"
+                      />
+                      &nbsp;{" "}
+                      <p className="font-bold text-[15px] tracking-widest">
+                        ADD CARD
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : null}
+      {loading && <LoadingShiba />}
     </div>
   );
 }

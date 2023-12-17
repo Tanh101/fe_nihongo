@@ -35,7 +35,8 @@ export type FlashCardDeck = {
   id: string;
   name: string;
   description: string;
-  flashCardInstances: FlashCardInstance[];
+  cards: FlashCardInstance[];
+  word_count: number;
 };
 
 export type Topic = {

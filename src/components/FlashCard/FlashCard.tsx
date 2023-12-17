@@ -14,16 +14,16 @@ const FlashCard: React.FC<FlashCardProps> = ({ deck, currentCard }) => {
   const [isNewPrevious, setIsNewPrevious] = useState(false);
   const [previousCard, setPreviousCard] = useState(0);
   const [currentCardText, setCurrentCardText] = useState(
-    deck.flashCardInstances[currentCard].word
+    deck?.cards[currentCard]?.word
   );
 
   const handleCardFlip = () => {
     setIsVisible(false);
     setIsFlipped((prev) => {
       if (isFlipped) {
-        setCurrentCardText(deck.flashCardInstances[currentCard].word);
+        setCurrentCardText(deck?.cards[currentCard]?.word);
       } else {
-        setCurrentCardText(deck.flashCardInstances[currentCard].definition);
+        setCurrentCardText(deck?.cards[currentCard]?.definition);
       }
       return !prev;
     });
@@ -46,7 +46,7 @@ const FlashCard: React.FC<FlashCardProps> = ({ deck, currentCard }) => {
         setTimeout(() => {
           setIsFlipped(false);
           setIsNewNext(true);
-          setCurrentCardText(deck.flashCardInstances[currentCard].word);
+          setCurrentCardText(deck?.cards[currentCard]?.word);
         }, 20);
       } else {
         if (isNewPrevious) {
@@ -55,7 +55,7 @@ const FlashCard: React.FC<FlashCardProps> = ({ deck, currentCard }) => {
         setTimeout(() => {
           setIsFlipped(false);
           setIsNewPrevious(true);
-          setCurrentCardText(deck.flashCardInstances[currentCard].word);
+          setCurrentCardText(deck?.cards[currentCard]?.word);
         }, 20);
       }
       setPreviousCard(currentCard);
@@ -81,10 +81,18 @@ const FlashCard: React.FC<FlashCardProps> = ({ deck, currentCard }) => {
       onClick={handleCardFlip}
     >
       <p
-        className={`${
-          isFlipped ? "flip_text" : "unflip_text"
-        } definition_container font-medium text-[50px] text-[#2E3856]`}
+        className={
+          `${
+            isFlipped ? "flip_text text-[45px]" : "unflip_text text-[50px]"
+          } definition_container font-medium text-[#2E3856] overflow-auto ` +
+          (currentCardText.length > 100 ? "w-[80%] h-[80%]" : "")
+        }
         hidden={!isVisible}
+        style={{
+          overflowWrap: "anywhere",
+          scrollbarWidth: "none" /* For Firefox */,
+          msOverflowStyle: "none" /* For Internet Explorer and Edge */,
+        }}
       >
         {currentCardText}
       </p>

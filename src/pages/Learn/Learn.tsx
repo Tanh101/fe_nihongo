@@ -4,13 +4,25 @@ import Navbar from "../../components/Navbar/Navbar";
 import Chapter from "../../components/Chapter/Chapter";
 import LoadingShiba from "../../components/Loading/LoadingShiba";
 import customAxios from "../../api/AxiosInstance";
-import { Topic } from "../../components/Definition";
+import { JapaneseLesson, Topic } from "../../components/Definition";
 function Learn() {
   const [loading, setLoading] = useState(true);
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [isChapterFinished, setIsChapterFinished] = useState<boolean[]>([]);
   async function getTopics() {
     await customAxios.get("/topics").then((res) => {
       setTopics(res.data.topics);
+      const tmp = res.data.topics;
+      tmp.map((topic: Topic) => {
+        let isFinished = true;
+        topic.lessons &&
+          topic.lessons.map((lesson: JapaneseLesson) => {
+            if (lesson && lesson.status !== "finished") {
+              isFinished = false;
+            }
+          });
+        setIsChapterFinished((prev) => [...prev, isFinished]);
+      });
     });
     setLoading(false);
   }
@@ -27,15 +39,20 @@ function Learn() {
           </p>
         </div>
         <div className="lessons_list flex flex-col ">
-          {topics.map((topic, index) => (
-            <Chapter
-              key={index}
-              lessons={topic?.lessons}
-              chapterNumber={index + 1}
-              loading={loading}
-              setLoading={setLoading}
-            />
-          ))}
+          {topics.map((topic, index) => {
+            if (topic.lessons.length > 0)
+              return (
+                <Chapter
+                  key={index}
+                  lessons={topic?.lessons}
+                  chapterNumber={index + 1}
+                  loading={loading}
+                  setLoading={setLoading}
+                  isChapterFinished={isChapterFinished[index]}
+                />
+              );
+            else return null;
+          })}
         </div>
       </div>
       {loading && <LoadingShiba />}
