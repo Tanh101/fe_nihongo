@@ -18,23 +18,23 @@ const FlashCardShowCase: React.FC<FlashCardShowCaseProps> = ({
   };
   return (
     <div
-      className="flash_card_show_case w-[70%] h-[80px] bg-white rounded-[0.25rem] cursor-pointer mb-4 flex flex-row hover:borer-b-violet-500"
+      className="flash_card_show_case w-[70%] h-[80px] min-w-min bg-white rounded-[0.25rem] cursor-pointer mb-4 flex flex-row hover:borer-b-violet-500"
       onClick={handleOnClick}
     >
-      <div className="w-[50px] h-[80px] flex flex-row justify-center items-center ml-2">
+      <div className="w-[50px] h-[80px] flex flex-row justify-center items-center ml-2 min-w-min">
         <FontAwesomeIcon
           icon={faFolder}
           size="2xl"
           style={{ color: "#2E3856" }}
         />
       </div>
-      <div className="flash_card_show_case_title_container w-full h-full flex flex-col justify-start items-center ml-[15px]">
+      <div className="flash_card_show_case_title_container w-full h-full flex flex-col justify-start items-center ml-[15px] min-w-min">
         <p className="flash_card_show_case_length font-medium text-[15px]  mt-[14px] w-full h-[40px] text-[#2E3856]">
-          {flashCardDeck.flashCardInstances.length}&nbsp;
-          {flashCardDeck.flashCardInstances.length > 1 ? "words" : "word"}
+          {flashCardDeck?.word_count}&nbsp;
+          {flashCardDeck?.word_count > 1 ? "words" : "word"}
         </p>
         <p className="flash_card_show_case_title text-[18px] font-semibold  mb-[18px] w-full h-[40px] text-[#2E3856]">
-          {flashCardDeck.name}
+          {flashCardDeck?.name}
         </p>
       </div>
     </div>

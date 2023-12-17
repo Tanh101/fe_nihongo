@@ -13,7 +13,7 @@ const Heart: React.FC<HeartProps> = ({ count }) => {
     <div className="w-[150px] h-[80px] flex items-start fixed top-3 left-8">
       {hearts.map((heart) => (
         <div key={heart} className={`heart heart-${heart}`}>
-          <FontAwesomeIcon icon={faHeart} style={{ color: "#f01461" }} />
+          <FontAwesomeIcon icon={faHeart} style={{ color: "#f01461" }} beat />
         </div>
       ))}
     </div>

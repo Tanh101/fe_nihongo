@@ -8,10 +8,12 @@ import Heart from "../../components/Heart/Heart";
 import { Modal, Progress } from "antd";
 import Explenation from "../../components/Explenation/Explenation";
 import ShibaCry from "../../assets/shiba_cry.png";
+import ShibaCongratulate from "../../assets/shiba_congratulate.png";
 import customAxios from "../../api/AxiosInstance";
 import { Vocabulary } from "../../components/Definition";
 import LoadingShiba from "../../components/Loading/LoadingShiba";
 import VocabularyComponent from "../../components/VocabularyComponent/VocabularyComponent";
+import Party from "../../assets/party.gif";
 
 const LessonPage = () => {
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ const LessonPage = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showQuestion, setShowQuestion] = useState(false);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [proggress, setProggress] = useState(0);
+  const [proggress, setProggress] = useState(1);
   const [finished, setFinished] = useState(false);
   const [correctAnswer, setCorrectAnswer] = useState("");
 
@@ -39,8 +41,8 @@ const LessonPage = () => {
     setLoading(true);
     await customAxios.get(`/lessons/${lessonId}`).then((res) => {
       setVocabularies(res.data.lesson.vocabularies);
-      setTotalQuestions(countTotalQuestions(vocabularies));
-      console.log("total question:" + countTotalQuestions(vocabularies));
+      const totalCount = countTotalQuestions(res.data.lesson.vocabularies);
+      setTotalQuestions(totalCount + 1);
       setLoading(false);
     });
   }
@@ -86,14 +88,37 @@ const LessonPage = () => {
     }
   };
   const handleAnswer = async (answerId: number, questionId: number) => {
+    const element = document.getElementById(answerId.toString()) as HTMLElement;
     const formData = new FormData();
     formData.append("answer", answerId.toString());
     formData.append("question_id", questionId.toString());
     await customAxios.patch(`/check/${lessonId}`, formData).then((res) => {
       if (res.data.message === "Correct answer") {
-        handleNext();
+        element.classList.add(
+          "bg-emerald-200",
+          "border-solid",
+          "border-2",
+          "border-green-500"
+        );
+        setTimeout(() => {
+          element.classList.remove(
+            "bg-emerald-200",
+            "bg-red-200",
+            "border-solid",
+            "border-2",
+            "border-green-500"
+          );
+          handleNext();
+        }, 500);
       } else {
-        setCorrectAnswer(res.data.correct_answer);
+        element.classList.add(
+          "border-solid",
+          "border-2",
+          "border-red-600",
+          "bg-red-200"
+        );
+
+        setCorrectAnswer(res.data.correct_answer.content);
         setLives((prevCount) => Math.max(prevCount - 1, 0));
         setShowExplenation(true);
       }
@@ -194,7 +219,9 @@ const LessonPage = () => {
         <Explenation
           handleClose={handleCloseExplenation}
           correctAnswer={correctAnswer}
-          explenationText={"Because its easy"}
+          explenationText={
+            vocabularies[currentVocabularyIndex].word.means[0].meaning
+          }
         />
       ) : null}
       <Modal
@@ -241,7 +268,7 @@ const LessonPage = () => {
       <Modal
         okButtonProps={{
           style: {
-            background: "linear-gradient(to right, #3B82F6, #8B5CF6)",
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
             width: "120px",
             height: "40px",
             fontSize: "16px",
@@ -257,13 +284,15 @@ const LessonPage = () => {
           },
         }}
         title={
-          <div className="w-full h-[50px] flex flex-row items-center justify-center text-2xl font-semibold mt-[20px]">
-            You have finished the lesson{" "}
-            <FontAwesomeIcon
-              icon={faMedal}
-              size="xl"
-              className="text-yellow-500 ml-2"
+          <div className="w-full h-[80px] flex flex-row justify-center items-center">
+            <img
+              src={Party}
+              className="w-[60px] h-[60px] transform scale-x-[-1]"
             />
+            <div className="w-[80%] h-[50px] flex flex-row items-center justify-center text-2xl font-semibold mt-[20px]">
+              You have finished the lesson!
+            </div>
+            <img src={Party} className="w-[60px] h-[60px]" />
           </div>
         }
         open={finished}
@@ -274,12 +303,16 @@ const LessonPage = () => {
       >
         <div className="w-full h-[300px] flex flex-col items-center justify-center mt-[50px]">
           <img
-            src={ShibaCry}
+            src={ShibaCongratulate}
             alt="shiba cry"
             className="w-[60%] h-[300px] object-cover pr-[15px]"
           />
           <p className="text-xl font-semibold w-full h-[20px] flex flex-row items-center justify-center mb-[100px] ">
-            Congratulations!
+            Congratulations
+            <FontAwesomeIcon
+              icon={faMedal}
+              className="text-amber-400 ml-1 text-[24px]"
+            />
           </p>
         </div>
       </Modal>
