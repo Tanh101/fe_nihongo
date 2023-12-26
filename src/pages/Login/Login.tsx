@@ -4,11 +4,13 @@ import "./Login.scss";
 import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
 import customAxios from "../../api/AxiosInstance";
 import { Toastify } from "../../toastify/Toastify";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../redux/features/userSlice";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize the history object
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,12 +21,12 @@ const Login: React.FC = () => {
       .post("/auth/login", formData)
       .then((res) => {
         if (res.status === 200) {
-          Toastify.success("Login successfully");
           const token = res.data.access_token;
           localStorage.setItem("access_token", token);
-
+          customAxios.defaults.headers["Authorization"] = `Bearer ${token}`;
+          dispatch(addUser(res.data.user));
+          Toastify.success(`Welcome back ${res.data.user.name}`);
           const role = res.data.user.role;
-
           if (role === "admin") {
             navigate("/dashboard");
           } else {

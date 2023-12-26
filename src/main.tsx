@@ -16,30 +16,42 @@ import Navigate from "./components/Navigate/Navigate";
 import CreateFlashcardPage from "./pages/FlashcardPage/CreateFlashCardPage";
 import LearnFlashCardPage from "./pages/FlashcardPage/LearnFlashCardPage";
 import EditFlashcardPage from "./pages/FlashcardPage/EditFlashCardPage";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "../src/redux/store";
+import AddTopicLessonPage from "./components/Dashboard/Topic/AddTopicLessonPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <Router>
-    <Routes>
-      <Route path="" element={<LandingPage />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/learn" element={<Learn />} />
-      <Route path="/practice" element={<PracticePage />} />
-      <Route path="/flashcard" element={<FlashcardPage />} />
-      <Route path="/dictionary" element={<DictionaryPage />} />
-      <Route path="/lessons/:lessonId" element={<LessonPage />} />
-      <Route path="/dictionary/:word" element={<WordDetailPage />} />
-      <Route path="/dashboard/*" element={<Navigate />} />
-      <Route path="/create_flashcard" element={<CreateFlashcardPage />} />
-      <Route
-        path="/flashcard/:flashCardDeckId"
-        element={<LearnFlashCardPage />}
-      />
-      <Route
-        path="edit_flashcard/:flashCardDeckId"
-        element={<EditFlashcardPage />}
-      />
-    </Routes>
-    <ToastContainer />
-  </Router>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <Router>
+        <Routes>
+          <Route path="" element={<LandingPage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/learn" element={<Learn />} />
+          <Route path="/practice" element={<PracticePage />} />
+          <Route path="/flashcard" element={<FlashcardPage />} />
+          <Route path="/dictionary" element={<DictionaryPage />} />
+          <Route path="/lessons/:lessonId" element={<LessonPage />} />
+          <Route path="/dictionary/:word" element={<WordDetailPage />} />
+          <Route path="/dashboard/*" element={<Navigate />} />
+          <Route path="/create_flashcard" element={<CreateFlashcardPage />} />
+          <Route
+            path="/flashcard/:flashCardDeckId"
+            element={<LearnFlashCardPage />}
+          />
+          <Route
+            path="edit_flashcard/:flashCardDeckId"
+            element={<EditFlashcardPage />}
+          />
+          <Route
+            path="/dashboard/topic/:topicId/add_lesson"
+            element={<AddTopicLessonPage />}
+          />
+        </Routes>
+        <ToastContainer />
+      </Router>
+    </PersistGate>
+  </Provider>
 );

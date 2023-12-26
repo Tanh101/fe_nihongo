@@ -10,4 +10,6 @@ const customAxios: AxiosInstance = axios.create({
     timeout: 10000,
 });
 
+
+
 export default customAxios;

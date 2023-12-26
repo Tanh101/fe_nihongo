@@ -26,6 +26,7 @@ function Learn() {
     });
     setLoading(false);
   }
+
   useEffect(() => {
     getTopics();
   }, []);
@@ -40,7 +41,7 @@ function Learn() {
         </div>
         <div className="lessons_list flex flex-col ">
           {topics.map((topic, index) => {
-            if (topic.lessons.length > 0)
+            if (topic.lessons.length > 1)
               return (
                 <Chapter
                   key={index}

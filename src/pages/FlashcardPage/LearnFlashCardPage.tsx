@@ -46,6 +46,7 @@ import { Toastify } from "../../toastify/Toastify";
 import Logo from "../../assets/shibalogo.jpg";
 import TextLogo from "../../assets/shiba_sensei_logo.png";
 import customAxios from "../../api/AxiosInstance";
+import { useAppSelector } from "../../redux/store";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const LearnFlashCardPage = () => {
@@ -69,6 +70,7 @@ const LearnFlashCardPage = () => {
     cards: [],
     word_count: 0,
   });
+  const user = useAppSelector((state) => state.user);
 
   const handleCopyClick = async (textToCopy: string, toolTipIndex: number) => {
     try {
@@ -784,7 +786,7 @@ const LearnFlashCardPage = () => {
                       Created by
                     </p>
                     <p className="creator_name text-[17px] font-medium text-[#2E3856]">
-                      Username
+                      {user.user?.name}
                     </p>
                   </div>
                 </div>

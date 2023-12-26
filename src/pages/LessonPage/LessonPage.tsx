@@ -48,6 +48,7 @@ const LessonPage = () => {
   }
   useEffect(() => {
     getVocabularies();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

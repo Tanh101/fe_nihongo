@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../../assets/shibalogo.jpg";
 import textlogo from "../../assets/shiba_sensei_logo.png";
 import { useState } from "react";
@@ -7,16 +7,11 @@ import { MenuItems } from "../../Models/MenuItems"; // Correct the import statem
 import { faBars, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
 function SideBar() {
-  const navigate = useNavigate();
   const [isShow, setIsShow] = useState<boolean>(true);
   const [active, setActive] = useState<string>("");
 
   const handleShowSidebar = () => {
     setIsShow(!isShow);
-  };
-
-  const handleLogoClick = () => {
-    navigate("/learn");
   };
 
   return (
@@ -28,10 +23,7 @@ function SideBar() {
       <div className="items flex flex-col w-full">
         <div className="flex justify-center h-20 px-2 py-2 border-b items-center cursor-pointer bg-[#fff]">
           {isShow && (
-            <div
-              className="logo h-[70px] mr-2 ml-2 flex font-bold w-[200px] items-center justify-around text-[#8b5cf6] text-xl font-roboto"
-              onClick={handleLogoClick}
-            >
+            <div className="logo h-[70px] mr-2 ml-2 flex font-bold w-[200px] items-center justify-around text-[#8b5cf6] text-xl font-roboto">
               <img className="h-[60px] w-[60px]" src={logo} alt="" />
               <img
                 className="h-[35px] w-[130px] object-fit"
