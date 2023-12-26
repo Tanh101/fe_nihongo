@@ -33,7 +33,6 @@
         display: flex;
         align-items: center;
         justify-content: space-around;
-        position: fixed;
         left: 220px;
         .learn_button{
             width: 90px;
@@ -86,8 +85,6 @@
     .user_account{
         width: 200px;
         height: 70px;
-        position: relative;
-        right: 0;
         display: flex;
         justify-content: space-around;
         align-items: center;

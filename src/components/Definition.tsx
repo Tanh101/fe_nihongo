@@ -1,12 +1,31 @@
 export type AnswerType = {
-  id: number;
-  question_id: number;
+  id: string;
+  question_id: string;
   content: string;
 };
 
+export type CreateAnswerType = {
+  id: string;
+  question_id: string;
+  content: string;
+  is_correct: number;
+};
+export type CreateQuestionType = {
+  id: string;
+  vocabulary_id: string;
+  content: string;
+  meaning: string;
+  status: string;
+  deleted_at: null;
+  created_at: Date;
+  updated_at: Date;
+  type: string;
+  answers: CreateAnswerType[];
+};
+
 export type QuestionType = {
-  id: number;
-  vocabulary_id: number;
+  id: string;
+  vocabulary_id: string;
   content: string;
   meaning: string;
   status: string;
@@ -18,7 +37,7 @@ export type QuestionType = {
 };
 
 export type JapaneseLesson = {
-  lessonId: number;
+  lessonId: string;
   lessonTitle: string;
   lessonDescription: string;
   lessonImage: string;
@@ -40,14 +59,14 @@ export type FlashCardDeck = {
 };
 
 export type Topic = {
-  topicId: number;
+  topicId: string;
   topicName: string;
   topicImage: string;
   lessons: JapaneseLesson[];
 };
 
 export type WordMeaning = {
-  id: number;
+  id: string;
   word_id: number;
   meaning: string;
   example: string;
@@ -58,7 +77,7 @@ export type WordMeaning = {
 };
 
 export type Word = {
-  id: number;
+  id: string;
   word: string;
   pronunciation: string;
   sino_vietnamese: string;

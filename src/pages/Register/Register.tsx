@@ -1,6 +1,43 @@
 import "./Register.scss";
 import LoginNavbar from "../../components/LoginNavbar/LoginNavbar";
+import customAxios from "../../api/AxiosInstance";
+import { Toastify } from "../../toastify/Toastify";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+
+  const navigate = useNavigate(); // Initialize the history object
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      Toastify.error("Password and confirm password doesn't match");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("name", name);
+    formData.append("password_confirmation", confirmPassword);
+    await customAxios
+      .post("/auth/register", formData)
+      .then((res) => {
+        if (res.status === 200) {
+          Toastify.success("Create account successfully");
+          navigate("/login");
+        } else {
+          Toastify.error("Incorrect email or password");
+        }
+      })
+      .catch((err) => {
+        if (err.response.data.message)
+          Toastify.error(err.response.data.message);
+        Toastify.error("Incorrect password");
+      });
+  };
   return (
     <div className="container_div h-full">
       <div className="register_page_background"></div>
@@ -9,7 +46,7 @@ function Register() {
         <form
           method="POST"
           id="registration-form"
-          action=""
+          onSubmit={handleSubmit}
           className="mb-6 px-5 pt-40"
         >
           <input
@@ -25,6 +62,21 @@ function Register() {
               htmlFor="email"
               className="login-label mb-4 block font-bold text-gray-700"
             >
+              Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              className="focus:border-green-500 focus:outline-none block w-full rounded-2xl border py-3 mt-1 px-3"
+              name="name"
+              placeholder="Name"
+              required
+              onChange={(e) => setName(e.target.value)}
+            />
+            <label
+              htmlFor="email"
+              className="login-label mt-5 mb-4 block font-bold text-gray-700"
+            >
               Email
             </label>
             <input
@@ -34,6 +86,7 @@ function Register() {
               name="email"
               placeholder="Email"
               required
+              onChange={(e) => setEmail(e.target.value)}
             />
             <label
               htmlFor="password"
@@ -48,6 +101,7 @@ function Register() {
               placeholder="Password"
               name="password"
               required
+              onChange={(e) => setPassword(e.target.value)}
             />
             <label
               htmlFor="confirm_password"
@@ -62,6 +116,7 @@ function Register() {
               placeholder="Confirm Password"
               name="confirm_password"
               required
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <button
               type="submit"
