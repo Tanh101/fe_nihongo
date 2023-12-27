@@ -1,10 +1,10 @@
 import Search from "./Search";
 import { userModel } from "../../../Models/Users";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import customAxios from "../../../api/AxiosInstance";
 import BasicTable from "./BasicTable";
 
-const User: React.FC<{ userdata: userModel[] }> = () => {
+const User = () => {
   const [users, setUsers] = useState<userModel[]>([]);
 
   const formatDate = (date: string) => {

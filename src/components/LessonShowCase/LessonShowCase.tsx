@@ -13,14 +13,14 @@ import { Toastify } from "../../toastify/Toastify";
 
 interface LessonShowCaseProps {
   lessonName: string;
-  lessonId: number;
+  lessonId: string;
   lesssonDescription?: string;
   lessonStatus: string;
   isLastInChapter: boolean;
   openLesson: boolean;
   setOpenLesson: (value: boolean) => void;
-  currentClickedLesson: number;
-  setCurrentClickedLesson: (value: number) => void;
+  currentClickedLesson: string;
+  setCurrentClickedLesson: (value: string) => void;
   loading: boolean;
   setLoading: (value: boolean) => void;
   isChapterFinished: boolean;
@@ -42,7 +42,7 @@ const LessonShowCase: React.FC<LessonShowCaseProps> = (props) => {
   };
   const handlePopupCancel = () => {
     props.setOpenLesson(false);
-    props.setCurrentClickedLesson(-1);
+    props.setCurrentClickedLesson("");
   };
   const handleStartLesson = async () => {
     props.setOpenLesson(false);

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import Navbar from "../../components/Navbar/Navbar";
 import { FlashCardDeck } from "../../components/Definition";
 import FlashCard from "../../components/FlashCard/FlashCard";
@@ -25,8 +26,8 @@ import { Tooltip, Dropdown, Progress, Modal } from "antd";
 import type { MenuProps } from "antd";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
+import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
 import {
   Document,
   Packer,
@@ -47,7 +48,9 @@ import Logo from "../../assets/shibalogo.jpg";
 import TextLogo from "../../assets/shiba_sensei_logo.png";
 import customAxios from "../../api/AxiosInstance";
 import { useAppSelector } from "../../redux/store";
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+pdfMake.vfs =
+  pdfFonts && pdfFonts.pdfMake ? pdfFonts.pdfMake.vfs : globalThis.pdfMake.vfs;
 
 const LearnFlashCardPage = () => {
   const navigate = useNavigate();

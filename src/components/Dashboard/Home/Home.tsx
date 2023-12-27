@@ -1,44 +1,275 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import customAxios from "../../../api/AxiosInstance";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faClipboardList,
+  faComments,
+  faLanguage,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
+
+interface ResponseNewUser {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: string;
+  created_at: string;
+  updated_at: string;
+  dob: string;
+  phone_number: null;
+  role: string;
+  gender: null;
+  avatar: null;
+  deleted_at: null;
+  status: string;
+}
+
+interface ResponseNewWord {
+  id: number;
+  word: string;
+  pronunciation: string;
+  sino_vietnamese: string;
+  image: null;
+  deleted_at: null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface ResponseNewLesson {
+  id: number;
+  topic_id: number;
+  title: string;
+  description: string;
+  image: null;
+  status: string;
+  deleted_at: null;
+  created_at: string;
+  updated_at: string;
+}
 
 function Home() {
-  // TODO: Fetch the data from your backend and store it in state variables
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [totalTopics, setTotalTopics] = useState<number>(0);
+  const [totalLessons, setTotalLessons] = useState<number>(0);
+  const [totalWords, setTotalWords] = useState<number>(0);
+  const [newUsers, setNewUsers] = useState<ResponseNewUser[]>([]);
+  const [newWords, setNewWords] = useState<ResponseNewWord[]>([]);
+  const [newLessons, setNewLessons] = useState<ResponseNewLesson[]>([]);
+
+  async function getStatistics() {
+    await customAxios.get("/dashboard/analytics?limit=5").then((res) => {
+      if (res.status === 200) {
+        setTotalUsers(res.data.results.total.total_users);
+        setTotalTopics(res.data.results.total.total_topics);
+        setTotalLessons(res.data.results.total.total_lessons);
+        setTotalWords(res.data.results.total.total_words);
+        setNewUsers(res.data.results.newlyRegisterUser);
+        setNewWords(res.data.results.newlyWords);
+        setNewLessons(res.data.results.newlyLessons);
+      }
+    });
+  }
+
+  useEffect(() => {
+    getStatistics();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-start bg-gray-100 h-screen w-full">
-      <div className="flex justify-around w-full mb-10 mt-16">
-        <h2 className="text-[20px] font-semibold bg-blue-500 text-black p-2 rounded">
-          Total number of users: {/* TODO: Display total number of users */}
-        </h2>
-        <h2 className="text-[20px] font-semibold bg-green-500 text-black p-2 rounded">
-          Total number of topics: {/* TODO: Display total number of topics */}
-        </h2>
-        <h2 className="text-[20px] font-semibold bg-red-500 text-black p-2 rounded">
-          Total number of lessons: {/* TODO: Display total number of lessons */}
-        </h2>
-        <h2 className="text-[20px] font-semibold bg-amber-500 text-black p-2 rounded">
-          Total number of words: {/* TODO: Display total number of words */}
-        </h2>
+      <div className="flex justify-evenly w-full mb-10 mt-10">
+        <div className=" bg-white border-b-4 border-blue-500 w-[22%]  h-[100px] flex flex-row items-center justify-around rounded drop-shadow-md">
+          <div className=" flex flex-col items-center justify-center">
+            <p className="text-[16px] font-medium text-[#9FA7BE] mb-2">
+              TOTAL USERS
+            </p>
+            <p className="text-[20px] font-semibold text-black flex items-center justify-end">
+              {totalUsers}
+            </p>
+          </div>
+          <div className="mr-2">
+            <FontAwesomeIcon
+              icon={faUser}
+              className="text-[32px] text-blue-500"
+            />
+          </div>
+        </div>
+        <div className=" bg-white border-b-4 border-amber-500 w-[22%]  h-[100px] flex flex-row items-center justify-around rounded drop-shadow-md">
+          <div className=" flex flex-col items-center justify-center">
+            <p className="text-[16px] font-medium text-[#9FA7BE] mb-2">
+              TOTAL TOPICS
+            </p>
+            <p className="text-[20px] font-semibold text-black flex items-center justify-end">
+              {totalTopics}
+            </p>
+          </div>
+          <div className="mr-2">
+            <FontAwesomeIcon
+              icon={faComments}
+              className="text-[33px] text-amber-500"
+            />
+          </div>
+        </div>
+        <div className=" bg-white border-b-4 border-red-500 w-[22%]  h-[100px] flex flex-row items-center justify-around rounded drop-shadow-md">
+          <div className=" flex flex-col items-center justify-center">
+            <p className="text-[16px] font-medium text-[#9FA7BE] mb-2">
+              TOTAL LESSONS
+            </p>
+            <p className="text-[20px] font-semibold text-black flex items-center justify-end">
+              {totalLessons}
+            </p>
+          </div>
+          <div className="mr-2">
+            <FontAwesomeIcon
+              icon={faClipboardList}
+              className="text-[33px] text-red-500"
+            />
+          </div>
+        </div>
+        <div className=" bg-white border-b-4 border-emerald-500 w-[22%]  h-[100px] flex flex-row items-center justify-around rounded drop-shadow-md">
+          <div className=" flex flex-col items-center justify-center">
+            <p className="text-[16px] font-medium text-[#9FA7BE] mb-2">
+              TOTAL WORDS
+            </p>
+            <p className="text-[20px] font-semibold text-black flex items-center justify-end">
+              {totalWords}
+            </p>
+          </div>
+          <div className="mr-2">
+            <FontAwesomeIcon
+              icon={faLanguage}
+              className="text-[33px] text-emerald-500"
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="flex justify-around w-full mb-10">
-        <div className="w-1/3 bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-start">
-          <h2 className="text-xl font-bold mb-4">Newly registered users</h2>
-          <table className="w-full">
-            {/* TODO: Display a table of new registered users */}
+      <div className="flex justify-around w-full mb-10 mt-8">
+        <div className="w-[30%] bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-start">
+          <h2 className="text-[17px] font-semibold mb-4">New users</h2>
+          <table className="min-w-full divide-y divide-gray-200 ">
+            <thead className="bg-violet-100">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  ID
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  Name
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  Email
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {newUsers?.map((user) => (
+                <tr key={user.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {user.id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {user.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {user.email}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
 
-        <div className="w-1/3 bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-start">
-          <h2 className="text-xl font-bold mb-4">Newly created words</h2>
-          <table className="w-full">
-            {/* TODO: Display a table of newly created words */}
+        <div className="w-[30%] bg-white rounded-lg shadow-md p-6 flex flex-col items-center justify-start">
+          <h2 className="text-[17px] font-semibold mb-4">New words</h2>
+          <table className="min-w-full divide-y divide-gray-200 ">
+            <thead className="bg-violet-100">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  ID
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  Word
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  Meaning
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {newWords?.map((word) => (
+                <tr key={word.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {word.id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {word.word}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {word.sino_vietnamese}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
 
-        <div className="w-1/3 bg-white rounded-lg shadow-md p-6 flex flex-col items-center jusify-start">
-          <h2 className="text-xl font-bold mb-4">Newly created lessons</h2>
-          <table className="w-full">
-            {/* TODO: Display a table of newly created lessons */}
+        <div className="w-[30%] bg-white rounded-lg shadow-md p-6 flex flex-col items-center jusify-start">
+          <h2 className="text-[17px] font-semibold mb-4">New lessons</h2>
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-violet-100">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  ID
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  Title
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-semibold text-black uppercase tracking-wider"
+                >
+                  Date
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {newLessons?.map((lesson) => (
+                <tr key={lesson.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {lesson.id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {lesson.title}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2E3856]">
+                    {new Date(lesson.created_at).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </div>

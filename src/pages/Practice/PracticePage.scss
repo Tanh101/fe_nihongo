@@ -1,24 +1,25 @@
-.page_container{
-    .practice_page_content{
-        height: 100vh;
-        width: 100%;
-        padding-top: 110px;
-        background-color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: start;
-        .practice_page_title_container{
-            padding-bottom: 20px;
-            .practice_page_title{
-            width: 250px;}
-        }
-        .practice_list{
-            width: 70%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: start;
-        }
+.page_container {
+  .practice_page_content {
+    height: 100vh;
+    width: 100%;
+    padding-top: 110px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    .practice_page_title_container {
+      padding-bottom: 20px;
+      .practice_page_title {
+        width: 250px;
+      }
     }
+    .practice_list {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+  }
 }

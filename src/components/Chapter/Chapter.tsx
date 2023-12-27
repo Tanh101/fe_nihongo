@@ -21,7 +21,7 @@ const Chapter = ({
   isChapterFinished,
 }: ChapterProps) => {
   const [openLesson, setOpenLesson] = useState(false);
-  const [currentClickedLesson, setCurrentClickedLesson] = useState(-1);
+  const [currentClickedLesson, setCurrentClickedLesson] = useState("");
 
   const chapterClassName = isChapterFinished
     ? "border-solid border-2 border-emerald-500 bg-green-50"
