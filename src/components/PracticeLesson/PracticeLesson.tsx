@@ -4,7 +4,7 @@ import "./PracticeLesson.scss";
 
 interface PracticeLessonProps {
   lessonName: string;
-  lessonId: number;
+  lessonId: string;
   lesssonDescription?: string;
 }
 const PracticeLesson: React.FC<PracticeLessonProps> = ({

@@ -4,7 +4,7 @@ import { Toastify } from "../../../toastify/Toastify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import customAxios from "../../../api/AxiosInstance";
-import { Table, Modal } from "antd";
+import { Table, Modal, Tooltip } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,6 +15,7 @@ import {
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import ShibaGangster from "../../../assets/shiba_gangster.png";
 
 interface ResponseLesson {
   id: number;
@@ -57,6 +58,8 @@ function AdminTopic() {
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [deleteButtonClicked, setDeleteButtonClicked] = useState(false);
+  const [deleteId, setDeleteId] = useState<number>(0);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTopicNameInput(e.target.value);
@@ -203,6 +206,14 @@ function AdminTopic() {
     setEditModalOpen(false);
   };
 
+  const handleModalCancel = () => {
+    setDeleteButtonClicked(false);
+  };
+  const handleDeleteButtonClicked = (topicId: number) => {
+    setDeleteId(topicId);
+    setDeleteButtonClicked(true);
+  };
+
   const handleDeleteTopic = async (topicId: number) => {
     await customAxios
       .delete("/dashboard/topics/" + topicId)
@@ -262,32 +273,56 @@ function AdminTopic() {
       align: "center",
       render: (_text, record) => (
         <div className="flex flex-row items-center justify-center">
-          <div
-            className="add_button w-[33px] h-[33px] bg-emerald-500 rounded-[5px] cursor-pointer hover:bg-emerald-400 flex flex-row items-center justify-center mr-4"
-            onClick={() => handleAddLesson(record.id)}
+          <Tooltip
+            title="Add lesson"
+            trigger={"hover"}
+            placement="top"
+            arrow={{ pointAtCenter: true }}
           >
-            <FontAwesomeIcon
-              icon={faCalendarPlus}
-              className="text-[16px] text-white"
-            />
-          </div>
-          <div
-            className="update_button w-[33px] h-[33px] bg-violet-500 rounded-[5px] cursor-pointer hover:bg-violet-400 flex flex-row items-center justify-center mr-4"
-            onClick={() =>
-              handleEditTopic(record.id, record.name, record.description)
-            }
+            <div
+              className="add_button w-[33px] h-[33px] bg-emerald-500 rounded-[5px] cursor-pointer hover:bg-emerald-400 flex flex-row items-center justify-center mr-4"
+              onClick={() => handleAddLesson(record.id)}
+            >
+              <FontAwesomeIcon
+                icon={faCalendarPlus}
+                className="text-[16px] text-white"
+              />
+            </div>
+          </Tooltip>
+          <Tooltip
+            title="Edit"
+            trigger={"hover"}
+            placement="top"
+            arrow={{ pointAtCenter: true }}
           >
-            <FontAwesomeIcon icon={faPen} className="text-[16px] text-white" />
-          </div>
-          <div
-            className="delete_button w-[33px] h-[33px] bg-red-500 rounded-[5px] cursor-pointer hover:bg-red-400 flex flex-row items-center justify-center"
-            onClick={() => handleDeleteTopic(record.id)}
+            <div
+              className="update_button w-[33px] h-[33px] bg-violet-500 rounded-[5px] cursor-pointer hover:bg-violet-400 flex flex-row items-center justify-center mr-4"
+              onClick={() =>
+                handleEditTopic(record.id, record.name, record.description)
+              }
+            >
+              <FontAwesomeIcon
+                icon={faPen}
+                className="text-[16px] text-white"
+              />
+            </div>
+          </Tooltip>
+          <Tooltip
+            title="Delete"
+            trigger={"hover"}
+            placement="top"
+            arrow={{ pointAtCenter: true }}
           >
-            <FontAwesomeIcon
-              icon={faTrashCan}
-              className="text-[16px] text-white"
-            />
-          </div>
+            <div
+              className="delete_button w-[33px] h-[33px] bg-red-500 rounded-[5px] cursor-pointer hover:bg-red-400 flex flex-row items-center justify-center"
+              onClick={() => handleDeleteButtonClicked(record.id)}
+            >
+              <FontAwesomeIcon
+                icon={faTrashCan}
+                className="text-[16px] text-white"
+              />
+            </div>
+          </Tooltip>
         </div>
       ),
       width: "15%",
@@ -484,6 +519,54 @@ function AdminTopic() {
             onChange={handleEditDescriptionChange}
             className="border-2 rounded-lg p-2 text-lg"
           />
+        </div>
+      </Modal>
+      <Modal
+        okButtonProps={{
+          style: {
+            background: "linear-gradient(to right, #cb356b,#bd3f32)",
+            width: "120px",
+            height: "40px",
+            fontSize: "16px",
+            borderRadius: "10px",
+          },
+          onMouseOver: (event) => {
+            event.currentTarget.style.opacity = "0.8";
+            event.currentTarget.style.borderColor = "#60A5FA";
+          },
+          onMouseLeave: (event) => {
+            event.currentTarget.style.opacity = "1";
+            event.currentTarget.style.borderColor = "#ffffff";
+          },
+        }}
+        title={
+          <div className="w-full h-[50px] flex flex-row items-center justify-center text-[22px] font-semibold mt-[20px]">
+            Do you want to delete this topic ?
+          </div>
+        }
+        open={deleteButtonClicked}
+        onOk={() => handleDeleteTopic(deleteId)}
+        onCancel={handleModalCancel}
+        closable={false}
+        cancelButtonProps={{
+          style: {
+            width: "120px",
+            height: "40px",
+            fontSize: "16px",
+            borderRadius: "10px",
+          },
+        }}
+        okText="Delete"
+      >
+        <div className="w-full h-[300px] flex flex-col items-center justify-center mt-[80px]">
+          <img
+            src={ShibaGangster}
+            alt="shiba cry"
+            className="w-[60%] h-[300px] object-cover"
+          />
+          <p className="text-xl font-semibold w-full h-[20px]  text-[14px] flex flex-row items-center justify-center mb-[120px] px-5 mt-4">
+            This topic will be deleted permanently
+          </p>
         </div>
       </Modal>
     </div>

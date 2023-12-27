@@ -4,7 +4,7 @@ import { QuestionType } from "../Definition";
 
 interface QuestionProps {
   question: QuestionType;
-  onAnswerClick: (answerId: number, questionId: number) => void;
+  onAnswerClick: (answerId: string, questionId: string) => void;
   answersClickable: boolean;
   setAnswersClickable: (value: boolean) => void;
 }
@@ -15,7 +15,7 @@ const Question: React.FC<QuestionProps> = ({
   answersClickable,
   setAnswersClickable,
 }) => {
-  function handleAnswerClick(answerId: number) {
+  function handleAnswerClick(answerId: string) {
     if (answersClickable) {
       onAnswerClick(answerId, question.id);
     }

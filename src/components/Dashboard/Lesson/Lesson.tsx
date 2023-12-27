@@ -1,13 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Toastify } from "../../../toastify/Toastify";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import customAxios from "../../../api/AxiosInstance";
-import { Table, Modal } from "antd";
+import { Table, Tooltip, Modal } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faSearch, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import ShibaGangster from "../../../assets/shiba_gangster.png";
 
 interface ResponseLesson {
   id: number;
@@ -25,27 +27,12 @@ function Lesson() {
   const [lessons, setLessons] = useState<ResponseLesson[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [inputValue, setInputValue] = useState("");
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editId, setEditId] = useState<number>(0);
-  const [editNameInput, setEditNameInput] = useState<string>("");
-  const [editDescriptionInput, setEditDescriptionInput] = useState<string>("");
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
-
-  const handleEditNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditNameInput(e.target.value);
-  };
-
-  const handleEditDescriptionChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setEditDescriptionInput(e.target.value);
-  };
-
-  const handleCancelEdit = () => {
-    setEditModalOpen(false);
-  };
+  const navigate = useNavigate();
+  const [deleteButtonClicked, setDeleteButtonClicked] = useState(false);
+  const [deleteId, setDeleteId] = useState<number>(0);
 
   async function getLessons() {
     await customAxios
@@ -70,53 +57,20 @@ function Lesson() {
     getLessons();
   }, [currentPage]);
 
-  const handleEditLesson = (
-    lessonId: number,
-    topicName: string,
-    topicDescription: string
-  ) => {
-    setEditId(lessonId);
-    setEditNameInput(topicName);
-    setEditDescriptionInput(topicDescription);
-    setEditModalOpen(true);
+  const handleModalCancel = () => {
+    setDeleteButtonClicked(false);
+  };
+  const handleDeleteButtonClicked = (lessonId: number) => {
+    setDeleteId(lessonId);
+    setDeleteButtonClicked(true);
   };
 
-  const handleUpdateLesson = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editNameInput === "") {
-      Toastify.error("Lesson name is required");
-      return;
-    }
-
-    await customAxios
-      .put("/dashboard/lessons/" + editId, {
-        title: editNameInput,
-        description: editDescriptionInput,
-        image: "N/A",
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          Toastify.success(response.data.message);
-        }
-      })
-      .catch((error) => {
-        if (error.response.status === 400) {
-          if (error.response.data.errors.name) {
-            toast.error(error.response.data.errors.name[0]);
-          }
-          if (error.response.data.errors.description) {
-            toast.error(error.response.data.errors.description[0]);
-          }
-        } else {
-          console.error("Unexpected error:", error.response.data);
-        }
-      });
-    getLessons();
-    setEditNameInput("");
-    setEditModalOpen(false);
+  const handleEditLesson = (lessonId: number) => {
+    navigate(`/dashboard/lessons/edit_lesson/${lessonId}`);
   };
 
   const handleDeleteLesson = async (lessonId: number) => {
+    setLoading(true);
     await customAxios
       .delete("/dashboard/lessons/" + lessonId)
       .then((response) => {
@@ -137,6 +91,7 @@ function Lesson() {
         }
       });
     getLessons();
+    setLoading(false);
   };
 
   const columns: ColumnsType<ResponseLesson> = [
@@ -168,23 +123,38 @@ function Lesson() {
       align: "center",
       render: (_text, record) => (
         <div className="flex flex-row items-center justify-center">
-          <div
-            className="update_button w-[33px] h-[33px] bg-violet-500 rounded-[5px] cursor-pointer hover:bg-violet-400 flex flex-row items-center justify-center mr-4"
-            onClick={() =>
-              handleEditLesson(record.id, record.title, record.description)
-            }
+          <Tooltip
+            title="Edit"
+            trigger={"hover"}
+            placement="top"
+            arrow={{ pointAtCenter: true }}
           >
-            <FontAwesomeIcon icon={faPen} className="text-[16px] text-white" />
-          </div>
-          <div
-            className="delete_button w-[33px] h-[33px] bg-red-500 rounded-[5px] cursor-pointer hover:bg-red-400 flex flex-row items-center justify-center"
-            onClick={() => handleDeleteLesson(record.id)}
+            <div
+              className="update_button w-[33px] h-[33px] bg-violet-500 rounded-[5px] cursor-pointer hover:bg-violet-400 flex flex-row items-center justify-center mr-4"
+              onClick={() => handleEditLesson(record.id)}
+            >
+              <FontAwesomeIcon
+                icon={faPen}
+                className="text-[16px] text-white"
+              />
+            </div>
+          </Tooltip>
+          <Tooltip
+            title="Delete"
+            trigger={"hover"}
+            placement="top"
+            arrow={{ pointAtCenter: true }}
           >
-            <FontAwesomeIcon
-              icon={faTrashCan}
-              className="text-[16px] text-white"
-            />
-          </div>
+            <div
+              className="delete_button w-[33px] h-[33px] bg-red-500 rounded-[5px] cursor-pointer hover:bg-red-400 flex flex-row items-center justify-center"
+              onClick={() => handleDeleteButtonClicked(record.id)}
+            >
+              <FontAwesomeIcon
+                icon={faTrashCan}
+                className="text-[16px] text-white"
+              />
+            </div>
+          </Tooltip>
         </div>
       ),
       width: "15%",
@@ -238,16 +208,12 @@ function Lesson() {
         )}
       </div>
       <Modal
-        title="Edit Topic"
-        open={editModalOpen}
-        onOk={handleUpdateLesson}
-        onCancel={handleCancelEdit}
         okButtonProps={{
           style: {
-            background: "linear-gradient(to right, #00b09b, #96c93d)",
+            background: "linear-gradient(to right, #cb356b,#bd3f32)",
             width: "120px",
-            height: "35px",
-            fontSize: "15px",
+            height: "40px",
+            fontSize: "16px",
             borderRadius: "10px",
           },
           onMouseOver: (event) => {
@@ -259,37 +225,34 @@ function Lesson() {
             event.currentTarget.style.borderColor = "#ffffff";
           },
         }}
-        okText="Edit"
+        title={
+          <div className="w-full h-[50px] flex flex-row items-center justify-center text-[22px] font-semibold mt-[20px]">
+            Do you want to delete this lesson ?
+          </div>
+        }
+        open={deleteButtonClicked}
+        onOk={() => handleDeleteLesson(deleteId)}
+        onCancel={handleModalCancel}
+        closable={false}
+        cancelButtonProps={{
+          style: {
+            width: "120px",
+            height: "40px",
+            fontSize: "16px",
+            borderRadius: "10px",
+          },
+        }}
+        okText="Delete"
       >
-        <div className="flex flex-col mt-8 mb-12">
-          <label
-            htmlFor="lessonName"
-            className="mb-2 font-bold text-[14px] text-[#2E3856]"
-          >
-            Lesson Name
-          </label>
-          <input
-            type="text"
-            id="lessonName"
-            name="lessonName"
-            value={editNameInput}
-            onChange={handleEditNameChange}
-            className="border-2 rounded-lg p-2 text-lg"
+        <div className="w-full h-[300px] flex flex-col items-center justify-center mt-[80px]">
+          <img
+            src={ShibaGangster}
+            alt="shiba cry"
+            className="w-[60%] h-[300px] object-cover"
           />
-          <label
-            htmlFor="lessonDescription"
-            className="mb-2 font-bold text-[14px] text-[#2E3856] mt-4"
-          >
-            Lesson Description
-          </label>
-          <input
-            type="text"
-            id="lessonDescription"
-            name="lessonDescription"
-            value={editDescriptionInput}
-            onChange={handleEditDescriptionChange}
-            className="border-2 rounded-lg p-2 text-lg"
-          />
+          <p className="text-xl font-semibold w-full h-[20px]  text-[14px] flex flex-row items-center justify-center mb-[120px] px-5 mt-4">
+            This lesson will be deleted permanently
+          </p>
         </div>
       </Modal>
     </div>

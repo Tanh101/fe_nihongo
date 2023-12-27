@@ -88,7 +88,7 @@ const LessonPage = () => {
       setAnswersClickable(true); // Switch to showing the first question
     }
   };
-  const handleAnswer = async (answerId: number, questionId: number) => {
+  const handleAnswer = async (answerId: string, questionId: string) => {
     const element = document.getElementById(answerId.toString()) as HTMLElement;
     const formData = new FormData();
     formData.append("answer", answerId.toString());

@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import "./AddTopicLessonPage.scss";
+import "./EditLessonPage.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowLeftLong,
@@ -11,7 +11,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 // import { Toastify } from "../../../toastify/Toastify";
 import { v4 as uuidv4 } from "uuid";
-import { CreateQuestionType } from "../../Definition";
+import { CreateQuestionType, JapaneseLesson } from "../../Definition";
 import customAxios from "../../../api/AxiosInstance";
 import { Toastify } from "../../../toastify/Toastify";
 import { Select } from "antd";
@@ -101,9 +101,17 @@ interface SectionInterface {
   questions: CreateQuestionType[];
 }
 
-function AddTopicLessonPage() {
+function EditLessonPage() {
   const navigate = useNavigate();
-  const { topicId } = useParams();
+  const { lessonId } = useParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [lesson, setLesson] = useState<JapaneseLesson>({
+    lessonId: "",
+    lessonTitle: "",
+    lessonDescription: "",
+    lessonImage: "",
+    status: "",
+  });
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isDisabled, setIsDisabled] = useState<boolean[]>([true]);
@@ -321,8 +329,32 @@ function AddTopicLessonPage() {
     }
   };
 
+  const getLesson = async () => {
+    await customAxios.get("/lessons/" + lessonId).then((res) => {
+      if (res.status === 200) {
+        setLesson(res.data.lesson);
+        setTitle(res.data.lesson.title);
+        setDescription(res.data.lesson.description);
+        setIsVocabularyDisabled(false);
+        setIsDisabled((prevIsDisabled) => {
+          const newIsDisabled = [...prevIsDisabled];
+          newIsDisabled[0] = false;
+          return newIsDisabled;
+        });
+      } else {
+        Toastify.error("Unexpected error");
+      }
+    });
+  };
+
+  useEffect(() => {
+    getLesson();
+    console.log(lesson);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleBack = () => {
-    navigate("/dashboard/topic");
+    navigate("/dashboard/lesson");
   };
 
   const onTitleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -347,14 +379,9 @@ function AddTopicLessonPage() {
         Toastify.error("Keyword is required");
         return;
       }
-      const allQuestionsAnswered = section.questions.every((question) => {
-        if (question.type === "choice")
-          return Object.prototype.hasOwnProperty.call(
-            selectedRadios,
-            question.id
-          );
-        else return true;
-      });
+      const allQuestionsAnswered = section.questions.every((question) =>
+        Object.prototype.hasOwnProperty.call(selectedRadios, question.id)
+      );
       if (!allQuestionsAnswered) {
         Toastify.error("Please select correct answer for all questions");
         return;
@@ -385,13 +412,13 @@ function AddTopicLessonPage() {
             return;
           }
         }
-        if (question.type === "choice")
-          question.answers[selectedRadios[question.id]].is_correct = 1;
+
+        question.answers[selectedRadios[question.id]].is_correct = 1;
       });
     });
     await customAxios
       .post("/dashboard/lessons", {
-        topic_id: topicId?.toString(),
+        topic_id: lessonId?.toString(),
         title: title,
         description: description,
         vocabularies: sectionList,
@@ -434,7 +461,7 @@ function AddTopicLessonPage() {
         </button>
         <div className="create_flashcard_page_title_container w-[100%] h-[100px] flex flex-row items-center justify-between min-w-max">
           <p className="create_flashcard_page_title text-2xl font-semibold text-black h-[40px] mt-2">
-            New lesson
+            Edit lesson
           </p>
           <button
             className="create_flashcard_button w-[90px] h-[40px] rounded-xl bg-violet-500 text-white bottom-24 hover:bg-violet-400"
@@ -742,4 +769,4 @@ function AddTopicLessonPage() {
   );
 }
 
-export default AddTopicLessonPage;
+export default EditLessonPage;
