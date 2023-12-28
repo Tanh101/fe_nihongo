@@ -1,0 +1,24 @@
+{
+    "date": {
+        "month": "1",
+        "year": 2023
+    },
+    "data": [
+        {
+            "group_id": 1,
+            "group_name": "adsad",
+            "categories": [
+                {
+                    "category_id": 1,
+                    "category_name": "abc",
+                    "data": "10000,20000,30000,...."
+                },
+                {
+                    "category_id": 2,
+                    "category_name": "adsc",
+                    "data": "10000,20000,30000,...."
+                }
+            ]
+        }
+    ]
+}
