@@ -11,20 +11,58 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 // import { Toastify } from "../../../toastify/Toastify";
 import { v4 as uuidv4 } from "uuid";
-import { CreateQuestionType, JapaneseLesson } from "../../Definition";
+import { CreateQuestionType } from "../../Definition";
 import customAxios from "../../../api/AxiosInstance";
 import { Toastify } from "../../../toastify/Toastify";
 import { Select } from "antd";
 import { Word } from "../../Definition";
+import LoadingShiba from "../../Loading/LoadingShiba";
+
+interface EditLessonAnswerType {
+  id: string;
+  question_id: string;
+  content: string;
+  is_correct: number;
+  updated_at: Date;
+  created_at: Date;
+  deleted_at: null;
+}
+
+interface EditLessonQuestionType {
+  id: string;
+  vocabulary_id: string;
+  content: string;
+  meaning: string;
+  status: string;
+  deleted_at: null;
+  created_at: Date;
+  updated_at: Date;
+  type: string;
+  answers: EditLessonAnswerType[];
+}
+
+interface EditLessonSectionType {
+  id: string;
+  lesson_id: string;
+  user_id: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  word_id: string;
+  word: Word;
+  questions: EditLessonQuestionType[];
+}
 
 interface CustomSelectProps {
   handleOptionSelect: (sectionIndex: number, value: string) => void;
   sectionIndex: number;
+  inputString?: string;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
   handleOptionSelect,
   sectionIndex,
+  inputString,
 }) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<Word[]>([]);
@@ -32,7 +70,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
   const fetchOptionsFromDatabase = async () => {
-    await customAxios.get("/dictionaries?word=" + inputValue).then((res) => {
+    await customAxios.get("/search?word=" + inputValue).then((res) => {
       if (res.status === 200) {
         const updatedOptions = res.data.words.map((word: Word) => ({
           ...word,
@@ -60,6 +98,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputValue]);
+
+  useEffect(() => {
+    setInputValue(inputString ? inputString : "");
+  }, [inputString]);
 
   const handleSelect = (selectedOptionId: string, selectedOption: string) => {
     setInputValue(selectedOption);
@@ -97,6 +139,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
 };
 
 interface SectionInterface {
+  id?: string;
   word_id: string;
   questions: CreateQuestionType[];
 }
@@ -105,15 +148,9 @@ function EditLessonPage() {
   const navigate = useNavigate();
   const { lessonId } = useParams();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [lesson, setLesson] = useState<JapaneseLesson>({
-    lessonId: "",
-    lessonTitle: "",
-    lessonDescription: "",
-    lessonImage: "",
-    status: "",
-  });
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean[]>([true]);
   const [isVocabularyDisabled, setIsVocabularyDisabled] =
     useState<boolean>(true);
@@ -127,50 +164,8 @@ function EditLessonPage() {
     Record<string, boolean>
   >({});
 
-  const [sectionList, setSectionList] = useState<SectionInterface[]>([
-    {
-      word_id: "",
-      questions: [
-        {
-          id: uuidv4(),
-          vocabulary_id: "",
-          content: "",
-          meaning: "",
-          status: "",
-          deleted_at: null,
-          created_at: new Date(),
-          updated_at: new Date(),
-          type: "",
-          answers: [
-            {
-              id: "",
-              question_id: "",
-              content: "",
-              is_correct: 0,
-            },
-            {
-              id: "",
-              question_id: "",
-              content: "",
-              is_correct: 0,
-            },
-            {
-              id: "",
-              question_id: "",
-              content: "",
-              is_correct: 0,
-            },
-            {
-              id: "",
-              question_id: "",
-              content: "",
-              is_correct: 0,
-            },
-          ],
-        },
-      ],
-    },
-  ]);
+  const [sectionList, setSectionList] = useState<SectionInterface[]>([]);
+  const [wordList, setWordList] = useState<Record<string, string>>({});
 
   const handleQuestionInput = (
     sectionIndex: number,
@@ -330,31 +325,58 @@ function EditLessonPage() {
   };
 
   const getLesson = async () => {
-    await customAxios.get("/lessons/" + lessonId).then((res) => {
+    setLoading(true);
+    await customAxios.get("/dashboard/lessons/" + lessonId).then((res) => {
       if (res.status === 200) {
-        setLesson(res.data.lesson);
         setTitle(res.data.lesson.title);
         setDescription(res.data.lesson.description);
-        setIsVocabularyDisabled(false);
+        if (res.data.lesson.vocabularies.length === 1) {
+          setIsVocabularyDisabled(true);
+        } else {
+          setIsVocabularyDisabled(false);
+        }
         setIsDisabled((prevIsDisabled) => {
           const newIsDisabled = [...prevIsDisabled];
           newIsDisabled[0] = false;
           return newIsDisabled;
         });
+        setSectionList(res.data.lesson.vocabularies);
+        res.data.lesson.vocabularies.forEach(
+          (section: EditLessonSectionType) => {
+            section.questions.forEach((question) => {
+              if (question.type === "choice") {
+                question.answers.forEach((answer, answerIndex: number) => {
+                  if (answer.is_correct === 1) {
+                    setSelectedRadios((prevSelectedRadios) => ({
+                      ...prevSelectedRadios,
+                      [question.id]: answerIndex,
+                    }));
+                  }
+                });
+              }
+            });
+            setWordList((prevWordList) => ({
+              ...prevWordList,
+              [section.id]: section.word.word,
+            }));
+          }
+        );
       } else {
         Toastify.error("Unexpected error");
       }
     });
+    setLoading(false);
   };
 
   useEffect(() => {
     getLesson();
-    console.log(lesson);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleBack = () => {
-    navigate("/dashboard/lesson");
+    const sender = localStorage.getItem("sender");
+    if (sender === "lesson") navigate("/dashboard/lesson");
+    else if (sender === "topic") navigate("/dashboard/topic");
   };
 
   const onTitleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -365,7 +387,7 @@ function EditLessonPage() {
     setDescription(e.target.value);
   };
 
-  const handleCreateLesson = async () => {
+  const handleUpdateLesson = async () => {
     if (title === "") {
       Toastify.error("Title is required");
       return;
@@ -379,9 +401,14 @@ function EditLessonPage() {
         Toastify.error("Keyword is required");
         return;
       }
-      const allQuestionsAnswered = section.questions.every((question) =>
-        Object.prototype.hasOwnProperty.call(selectedRadios, question.id)
-      );
+      const allQuestionsAnswered = section.questions.every((question) => {
+        if (question.type === "choice")
+          return Object.prototype.hasOwnProperty.call(
+            selectedRadios,
+            question.id
+          );
+        else return true;
+      });
       if (!allQuestionsAnswered) {
         Toastify.error("Please select correct answer for all questions");
         return;
@@ -412,21 +439,21 @@ function EditLessonPage() {
             return;
           }
         }
-
-        question.answers[selectedRadios[question.id]].is_correct = 1;
+        if (question.type === "choice")
+          question.answers[selectedRadios[question.id]].is_correct = 1;
       });
     });
+
     await customAxios
-      .post("/dashboard/lessons", {
-        topic_id: lessonId?.toString(),
+      .put(`/dashboard/lessons/${lessonId}`, {
         title: title,
         description: description,
         vocabularies: sectionList,
       })
       .then((res) => {
         if (res.status === 200) {
-          Toastify.success("Lesson added successfully");
-          navigate("/dashboard/topic");
+          Toastify.success("Lesson updated successfully");
+          navigate("/dashboard/lesson");
         } else {
           Toastify.error("Unexpected error");
           return;
@@ -465,9 +492,9 @@ function EditLessonPage() {
           </p>
           <button
             className="create_flashcard_button w-[90px] h-[40px] rounded-xl bg-violet-500 text-white bottom-24 hover:bg-violet-400"
-            onClick={handleCreateLesson}
+            onClick={handleUpdateLesson}
           >
-            Create
+            Save
           </button>
         </div>
         <div className="w-full mb-5 min-h-min">
@@ -514,6 +541,7 @@ function EditLessonPage() {
               <CustomSelect
                 sectionIndex={sectionIndex}
                 handleOptionSelect={onChangeVocabulary}
+                inputString={section.id ? wordList[section.id] : ""}
               />
               {section.questions.map((question, questionIndex) => {
                 return (
@@ -765,6 +793,7 @@ function EditLessonPage() {
           );
         })}
       </div>
+      {loading && <LoadingShiba />}
     </div>
   );
 }

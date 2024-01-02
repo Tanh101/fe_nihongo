@@ -2,7 +2,11 @@ import { useState, ChangeEvent, useEffect } from "react";
 import "./EditFlashCardPage.scss";
 import Navbar from "../../components/Navbar/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeftLong,
+  faMinus,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FlashCardInstance } from "../../components/Definition";
 import { useNavigate, useParams } from "react-router-dom";
 import { Toastify } from "../../toastify/Toastify";
@@ -234,12 +238,22 @@ function EditFlashcardPage() {
     setDescription("");
   };
 
+  const handleBack = () => {
+    navigate(`/flashcard/${flashCardDeckId}`);
+  };
+
   return (
     <div className="create_flashcardpage_container overflow-y-scroll bg-[#F6F7FB]">
       <Navbar active_category="flashcard"></Navbar>
       {loading === false ? (
         <div>
           <div className="create_flashcard_page_content w-full h-screen pt-24 flex flex-col items-center justify-start ">
+            <button
+              className="w-[100px] h-[50px] absolute left-[15px] top-[100px] text-[14px] text-[#2E3856] bg-white border-2 border-solid border-violet-500 rounded-[10px] font-semibold hover:bg-violet-100"
+              onClick={handleBack}
+            >
+              <FontAwesomeIcon icon={faArrowLeftLong} /> Back
+            </button>
             <div className="create_flashcard_page_title_container w-[70%] h-[100px] flex flex-row items-center justify-between min-w-max">
               <p className="create_flashcard_page_title text-2xl font-semibold text-black h-[40px] mt-2">
                 Edit flashcard

@@ -21,6 +21,8 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../src/redux/store";
 import AddTopicLessonPage from "./components/Dashboard/Topic/AddTopicLessonPage";
 import EditLessonPage from "./components/Dashboard/Lesson/EditLessonPage";
+import CreateDictionaryPage from "./components/Dashboard/Dictionary/CreateDictionaryPage";
+import EditDictionaryPage from "./components/Dashboard/Dictionary/EditDictionaryPage";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
@@ -53,6 +55,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route
             path="/dashboard/lessons/edit_lesson/:lessonId"
             element={<EditLessonPage />}
+          />
+          <Route
+            path="/dashboard/create_dictionary"
+            element={<CreateDictionaryPage />}
+          />
+          <Route
+            path="/dashboard/edit_dictionary/:wordContent"
+            element={<EditDictionaryPage />}
           />
         </Routes>
 

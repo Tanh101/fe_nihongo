@@ -32,7 +32,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
 
   const fetchOptionsFromDatabase = async () => {
-    await customAxios.get("/dictionaries?word=" + inputValue).then((res) => {
+    await customAxios.get("/search?word=" + inputValue).then((res) => {
       if (res.status === 200) {
         const updatedOptions = res.data.words.map((word: Word) => ({
           ...word,

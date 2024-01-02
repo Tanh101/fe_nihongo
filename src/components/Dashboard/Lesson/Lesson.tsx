@@ -36,7 +36,9 @@ function Lesson() {
 
   async function getLessons() {
     await customAxios
-      .get(`/dashboard/lessons?cur_page=${currentPage}&per_page=10`)
+      .get(
+        `/dashboard/lessons?title=${searchTerm}&cur_page=${currentPage}&per_page=10`
+      )
       .then((res) => {
         if (res.status === 200) {
           setLessons(res.data.lessons);
@@ -55,8 +57,12 @@ function Lesson() {
   useEffect(() => {
     setLoading(true);
     getLessons();
-  }, [currentPage]);
+  }, [currentPage, searchTerm]);
 
+  const handleSearch = () => {
+    setSearchTerm(inputValue);
+    setCurrentPage(1);
+  };
   const handleModalCancel = () => {
     setDeleteButtonClicked(false);
   };
@@ -66,6 +72,7 @@ function Lesson() {
   };
 
   const handleEditLesson = (lessonId: number) => {
+    localStorage.setItem("sender", "lesson");
     navigate(`/dashboard/lessons/edit_lesson/${lessonId}`);
   };
 
@@ -92,6 +99,7 @@ function Lesson() {
       });
     getLessons();
     setLoading(false);
+    setDeleteButtonClicked(false);
   };
 
   const columns: ColumnsType<ResponseLesson> = [
@@ -177,7 +185,7 @@ function Lesson() {
             style={{ paddingLeft: "2.5rem", paddingRight: "2.5rem" }}
           />
           <button
-            onClick={() => setSearchTerm(inputValue)}
+            onClick={() => handleSearch()}
             className="absolute right-2 top-1/2 h-[35px] w-[80px] transform -translate-y-1/2 bg-violet-500 text-white rounded-[30px] text-[16px] hover:bg-violet-400"
           >
             Search
@@ -188,11 +196,7 @@ function Lesson() {
         {lessons && (
           <Table
             columns={columns}
-            dataSource={lessons
-              .filter((lesson) =>
-                lesson.title.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((lesson) => ({ ...lesson, key: lesson.id.toString() }))}
+            dataSource={lessons}
             pagination={{
               current: currentPage,
               pageSize: 10,
