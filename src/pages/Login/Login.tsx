@@ -6,13 +6,16 @@ import customAxios from "../../api/AxiosInstance";
 import { Toastify } from "../../toastify/Toastify";
 import { useDispatch } from "react-redux";
 import { addUser } from "../../redux/features/userSlice";
+import LoadingShiba from "../../components/Loading/LoadingShiba";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize the history object
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     const formData = new FormData();
     formData.append("email", email);
@@ -21,8 +24,10 @@ const Login: React.FC = () => {
       .post("/auth/login", formData)
       .then((res) => {
         if (res.status === 200) {
+          setLoading(false);
           const token = res.data.access_token;
           localStorage.setItem("access_token", token);
+          localStorage.setItem("refresh_token", res.data.refresh_token);
           customAxios.defaults.headers["Authorization"] = `Bearer ${token}`;
           dispatch(addUser(res.data.user));
           Toastify.success(`Welcome back ${res.data.user.name}`);
@@ -122,6 +127,7 @@ const Login: React.FC = () => {
           </div>
         </form>
       </div>
+      {loading && <LoadingShiba />}
     </div>
   );
 };

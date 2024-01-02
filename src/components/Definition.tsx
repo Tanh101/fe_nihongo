@@ -67,7 +67,7 @@ export type Topic = {
 
 export type WordMeaning = {
   id: string;
-  word_id: number;
+  word_id: string;
   meaning: string;
   example: string;
   example_meaning: string;

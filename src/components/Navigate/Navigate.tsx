@@ -12,7 +12,9 @@ import { useAppSelector } from "../../redux/store";
 function Navigate() {
   const user = useAppSelector((state) => state.user);
   useEffect(() => {
-    if (user.user?.role !== "admin") window.location.href = "/learn";
+    if (user.user) {
+      if (user.user?.role !== "admin") window.location.href = "/learn";
+    } else window.location.href = "login";
   }, []);
   return (
     <div className="flex w-full h-screen">
@@ -23,7 +25,7 @@ function Navigate() {
           <Route path="" element={<Home />} />
           <Route path="topic" element={<AdminTopic />} />
           <Route path="lesson" element={<Lesson />} />
-          <Route path="dicitonary" element={<Dictionary />} />
+          <Route path="dictionary" element={<Dictionary />} />
           <Route path="user" element={<User />} />
         </Routes>
       </div>
