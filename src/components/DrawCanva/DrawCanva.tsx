@@ -111,7 +111,7 @@ function DrawCanva({ setOpenModal, appendToInput }: Props) {
 
     const sendToServer = async () => {
         console.log('Sending to server:', lines);
-        await axios.post('http://localhost:5000/predict-hiragana', {
+        await axios.post('http://116.110.215.102:5000/predict-hiragana', {
             lines: lines
         }, {
             headers: {

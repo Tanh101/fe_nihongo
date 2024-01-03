@@ -1,24 +1,52 @@
-{
-    "date": {
-        "month": "1",
-        "year": 2023
+[
+    {
+        "month_year": "2023-12",
+        "balances": [
+            {
+                "amount": 100000,
+                "category_id": 1
+            },
+            {
+                "amount": 200000,
+                "category_id": 2
+            },
+            {
+                "amount": 300000,
+                "category_id": 3
+            }
+        ]
     },
-    "data": [
-        {
-            "group_id": 1,
-            "group_name": "adsad",
-            "categories": [
-                {
-                    "category_id": 1,
-                    "category_name": "abc",
-                    "data": "10000,20000,30000,...."
-                },
-                {
-                    "category_id": 2,
-                    "category_name": "adsc",
-                    "data": "10000,20000,30000,...."
-                }
-            ]
-        }
-    ]
-}
+    {
+        "success": true,
+        "message": "Get balance_sheet successfully",
+        "balance_sheet": [
+            {
+                "id": 1,
+                "amount": 150000,
+                "category_id": 1,
+                "bs_month_year": "2023-12",
+                "created_at": "2023-12-15 17:18:10",
+                "updated_at": "2023-12-15 17:18:10",
+                "deleted_at": null
+            },
+            {
+                "id": 2,
+                "amount": 200000,
+                "category_id": 2,
+                "bs_month_year": "2023-12",
+                "created_at": "2023-12-15 17:18:10",
+                "updated_at": "2023-12-15 17:18:10",
+                "deleted_at": null
+            },
+            {
+                "id": 3,
+                "amount": 210000,
+                "category_id": 3,
+                "bs_month_year": "2023-12",
+                "created_at": "2023-12-15 17:18:10",
+                "updated_at": "2023-12-15 17:18:10",
+                "deleted_at": null
+            }
+        ]
+    }
+]
