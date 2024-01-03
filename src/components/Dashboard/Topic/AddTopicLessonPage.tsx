@@ -361,7 +361,7 @@ function AddTopicLessonPage() {
               return;
             }
           });
-        } else if (question.type === "write") {
+        } else if (question.type === "writing") {
           if (question.answers[0].content === "") {
             Toastify.error("Answer is required");
             return;
@@ -369,6 +369,11 @@ function AddTopicLessonPage() {
         }
         if (question.type === "choice")
           question.answers[selectedRadios[question.id]].is_correct = 1;
+        if (question.type === "writing") {
+          for (let i = 0; i < question.answers.length; i++) {
+            question.answers[i].is_correct = 1;
+          }
+        }
       });
     });
     await customAxios
