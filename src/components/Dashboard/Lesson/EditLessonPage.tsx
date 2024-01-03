@@ -422,6 +422,11 @@ function EditLessonPage() {
           }
           question.answers[selectedRadios[question.id]].is_correct = 1;
         }
+        if (question.type === "writing") {
+          for (let i = 0; i < question.answers.length; i++) {
+            question.answers[i].is_correct = 1;
+          }
+        }
       });
     });
 
