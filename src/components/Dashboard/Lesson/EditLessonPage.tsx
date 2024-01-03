@@ -454,6 +454,32 @@ function EditLessonPage() {
   ) => {
     const newSectionList = [...sectionList];
     newSectionList[sectionIndex].questions[questionIndex].type = value;
+    newSectionList[sectionIndex].questions[questionIndex].answers = [
+      {
+        id: "",
+        question_id: "",
+        content: "",
+        is_correct: 0,
+      },
+      {
+        id: "",
+        question_id: "",
+        content: "",
+        is_correct: 0,
+      },
+      {
+        id: "",
+        question_id: "",
+        content: "",
+        is_correct: 0,
+      },
+      {
+        id: "",
+        question_id: "",
+        content: "",
+        is_correct: 0,
+      },
+    ];
     setSectionList(newSectionList);
   };
 
