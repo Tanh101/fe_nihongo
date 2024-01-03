@@ -38,10 +38,12 @@ const Login: React.FC = () => {
             navigate("/learn");
           }
         } else {
+          setLoading(false);
           Toastify.error("Incorrect username or password");
         }
       })
       .catch((err) => {
+        setLoading(false);
         if (err.response.data.message)
           Toastify.error(err.response.data.message);
         Toastify.error("Incorrect password");
