@@ -49,7 +49,7 @@ function Learn() {
         </div>
         <div className="lessons_list flex flex-col ">
           {topics.map((topic, index) => {
-            if (topic.lessons.length >= 1 && topic.lessons[0] === null)
+            if (topic.lessons.length >= 1 && topic.lessons[0] !== null)
               return (
                 <Chapter
                   key={index}
