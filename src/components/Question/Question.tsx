@@ -29,10 +29,14 @@ const Question: React.FC<QuestionProps> = ({
     setInputValue((prev) => prev + data);
   };
   function handleAnswerClick(answerId: string) {
-    if (answersClickable) {
+    if (
+      (answersClickable && question.type === "choice") ||
+      question.type === "writing"
+    ) {
       onAnswerClick(answerId, question.id, question.type);
     }
     setAnswersClickable(false);
+    setOpenModal(false);
   }
   const answerClass = answersClickable
     ? "border-solid border-2 border-gray-300 p-4 rounded-2xl cursor-pointer hover:bg-sky-100 text-[18px] flex flex-row font-medium items-center justify-center"
