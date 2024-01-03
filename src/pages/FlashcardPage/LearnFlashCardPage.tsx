@@ -89,6 +89,11 @@ const LearnFlashCardPage = () => {
   };
 
   async function getFlashCardDeck() {
+    const access_token = localStorage.getItem("access_token");
+    const refresh_token = localStorage.getItem("refresh_token");
+    if (!access_token && !refresh_token) {
+      navigate("/login");
+    }
     await customAxios.get("/flashcard/" + flashCardDeckId).then((res) => {
       setFlashCardDeck(res.data.flashcard);
       setLoading(false);

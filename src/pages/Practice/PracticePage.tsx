@@ -5,12 +5,19 @@ import customAxios from "../../api/AxiosInstance";
 import { JapaneseLesson, Topic } from "../../components/Definition";
 import LoadingShiba from "../../components/Loading/LoadingShiba";
 import PracticeLesson from "../../components/PracticeLesson/PracticeLesson";
+import { useNavigate } from "react-router-dom";
 
 function PracticePage() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [practiceLessons, setPracticeLessons] = useState<JapaneseLesson[]>([]);
 
   const getPracticeLessons = async () => {
+    const access_token = localStorage.getItem("access_token");
+    const refresh_token = localStorage.getItem("refresh_token");
+    if (!access_token && !refresh_token) {
+      navigate("/login");
+    }
     await customAxios.get("/topics").then((res) => {
       const tmp = res.data.topics;
       tmp.map((topic: Topic) => {
@@ -27,6 +34,7 @@ function PracticePage() {
 
   useEffect(() => {
     getPracticeLessons();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

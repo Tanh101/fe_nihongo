@@ -18,10 +18,16 @@ function FlashcardPage() {
     navigate("/create_flashcard");
   };
   useEffect(() => {
+    const access_token = localStorage.getItem("access_token");
+    const refresh_token = localStorage.getItem("refresh_token");
+    if (!access_token && !refresh_token) {
+      navigate("/login");
+    }
     customAxios.get("/flashcard").then((res) => {
       setFlashcardDecks(res.data.flashcards);
       setLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

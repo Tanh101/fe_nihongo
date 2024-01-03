@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
+import { Toastify } from '../toastify/Toastify';
+
 
 const customAxios: AxiosInstance = axios.create({
   baseURL: 'http://localhost/api',
@@ -18,13 +20,13 @@ await customAxios.post('/refresh', {
         customAxios.defaults.headers['Authorization'] = `Bearer ${newAccessToken}`;
 	localStorage.setItem('access_token', newAccessToken);
 	localStorage.setItem('refresh_token', newRefreshToken);
-    }).catch(err => {
-		if (err.response.status === 401 && err.response.data.message === "Unauthorized") {
+    }).catch((err) => {
 			localStorage.removeItem('access_token');
 			localStorage.removeItem('refresh_token');
 			localStorage.removeItem('username');
 			localStorage.removeItem('email');
-		}
+			Toastify.error(`${err.response.data.message}. Please login again`);
+			window.location.href = '/login';
 	})
 
 	

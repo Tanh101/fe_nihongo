@@ -37,7 +37,13 @@ const LessonPage = () => {
     setIsModalOpen(false);
     navigate("/Learn");
   };
+
   async function getVocabularies() {
+    const access_token = localStorage.getItem("access_token");
+    const refresh_token = localStorage.getItem("refresh_token");
+    if (!access_token && !refresh_token) {
+      navigate("/login");
+    }
     setLoading(true);
     await customAxios.get(`/lessons/${lessonId}`).then((res) => {
       setVocabularies(res.data.lesson.vocabularies);
