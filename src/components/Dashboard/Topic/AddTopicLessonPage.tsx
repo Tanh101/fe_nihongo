@@ -106,7 +106,6 @@ function AddTopicLessonPage() {
   const { topicId } = useParams();
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [isDisabled, setIsDisabled] = useState<boolean[]>([true]);
   const [isVocabularyDisabled, setIsVocabularyDisabled] =
     useState<boolean>(true);
   const [selectedRadios, setSelectedRadios] = useState<Record<string, number>>(
@@ -245,11 +244,6 @@ function AddTopicLessonPage() {
     });
     setSectionList(newSectionList);
     setIsVocabularyDisabled(false);
-    setIsDisabled((prevIsDisabled) => {
-      const newIsDisabled = [...prevIsDisabled];
-      newIsDisabled[index + 1] = true;
-      return newIsDisabled;
-    });
   };
 
   const removeSection = (index: number) => {
@@ -301,24 +295,12 @@ function AddTopicLessonPage() {
       ],
     });
     setSectionList(newSectionList);
-    setIsDisabled((prevIsDisabled) => {
-      const newIsDisabled = [...prevIsDisabled];
-      newIsDisabled[sectionIndex] = false;
-      return newIsDisabled;
-    });
   };
 
   const removeQuestion = (sectionIndex: number, questionIndex: number) => {
     const newSectionList = [...sectionList];
     newSectionList[sectionIndex].questions.splice(questionIndex, 1);
     setSectionList(newSectionList);
-    if (newSectionList[sectionIndex].questions.length === 1) {
-      setIsDisabled((prevIsDisabled) => {
-        const newIsDisabled = [...prevIsDisabled];
-        newIsDisabled[sectionIndex] = true;
-        return newIsDisabled;
-      });
-    }
   };
 
   const handleBack = () => {
@@ -500,14 +482,14 @@ function AddTopicLessonPage() {
                       </p>
                       <button
                         className={`${
-                          isDisabled[sectionIndex]
+                          section.questions.length === 1
                             ? " bg-gray-300"
                             : " bg-red-500 hover:bg-red-400"
                         } remove_row_button w-[30px] h-[30px] rounded-lg mt-[-10px] text-white`}
                         onClick={() =>
                           removeQuestion(sectionIndex, questionIndex)
                         }
-                        disabled={isDisabled[sectionIndex]}
+                        disabled={section.questions.length === 1}
                       >
                         <FontAwesomeIcon icon={faMinus} />
                       </button>

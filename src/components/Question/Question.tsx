@@ -67,7 +67,7 @@ const Question: React.FC<QuestionProps> = ({
             <div className="w-full h-[60px] flex flex-row items-center justify-between">
               <input
                 readOnly={true}
-                className="w-[70%] h-[50px] rounded-[10px] px-2 border-2 border-solid border-gray-300"
+                className="question_input w-[70%] h-[50px] rounded-[10px] px-2 border-2 border-solid border-gray-300"
                 onClick={() => setOpenModal(true)}
                 value={inputValue}
                 placeholder="Write your answer here"
