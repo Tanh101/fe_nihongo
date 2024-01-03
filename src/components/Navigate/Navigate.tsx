@@ -15,6 +15,7 @@ function Navigate() {
     if (user.user) {
       if (user.user?.role !== "admin") window.location.href = "/learn";
     } else window.location.href = "login";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className="flex w-full h-screen">
