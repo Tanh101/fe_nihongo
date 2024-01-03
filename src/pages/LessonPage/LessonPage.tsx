@@ -114,13 +114,15 @@ const LessonPage = () => {
           );
         }
         setTimeout(() => {
-          element.classList.remove(
-            "bg-emerald-200",
-            "bg-red-200",
-            "border-solid",
-            "border-2",
-            "border-green-500"
-          );
+          if (questionType === "choice") {
+            element.classList.remove(
+              "bg-emerald-200",
+              "bg-red-200",
+              "border-solid",
+              "border-2",
+              "border-green-500"
+            );
+          }
           handleNext();
         }, 500);
       } else {
