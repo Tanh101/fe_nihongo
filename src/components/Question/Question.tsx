@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Question.scss";
 import { QuestionType } from "../Definition";
+import DrawCanva from "../DrawCanva/DrawCanva";
 
 interface QuestionProps {
   question: QuestionType;
-  onAnswerClick: (answerId: string, questionId: string) => void;
+  onAnswerClick: (
+    answerId: string,
+    questionId: string,
+    questionType: string
+  ) => void;
   answersClickable: boolean;
   setAnswersClickable: (value: boolean) => void;
 }
@@ -15,9 +20,17 @@ const Question: React.FC<QuestionProps> = ({
   answersClickable,
   setAnswersClickable,
 }) => {
+  const [openModal, setOpenModal] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const handleClearInput = () => {
+    setInputValue("");
+  };
+  const appendToInput = (data: string) => {
+    setInputValue((prev) => prev + data);
+  };
   function handleAnswerClick(answerId: string) {
     if (answersClickable) {
-      onAnswerClick(answerId, question.id);
+      onAnswerClick(answerId, question.id, question.type);
     }
     setAnswersClickable(false);
   }
@@ -44,31 +57,71 @@ const Question: React.FC<QuestionProps> = ({
           {question.content}
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-4 w-full h-auto">
-        {question.answers.map((answer) => (
-          <div
-            key={answer.id}
-            id={answer.id.toString()}
-            className={answerClass}
-            onClick={() => handleAnswerClick(answer.id)}
-          >
-            <p
-              className={
-                "overflow-auto w-full h-[100%] " +
-                (answer.content.length > 20
-                  ? "flex flex-row items-center justify-start"
-                  : "flex flex-row items-center justify-center")
-              }
-              style={{
-                overflowWrap: "anywhere",
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-              }}
-            >
-              {answer.content}
-            </p>
+      <div
+        className={`${
+          question.type === "choice" ? "grid grid-cols-2 gap-4" : ""
+        } w-full h-auto`}
+      >
+        {question.type === "writing" ? (
+          <div className="w-full h-[500px] flex flex-col items-center justify-start">
+            <div className="w-full h-[60px] flex flex-row items-center justify-between">
+              <input
+                readOnly={true}
+                className="w-[70%] h-[50px] rounded-[10px] px-2 border-2 border-solid border-gray-300"
+                onClick={() => setOpenModal(true)}
+                value={inputValue}
+                placeholder="Write your answer here"
+              ></input>
+              <div className="w-[25%] h-[50px] flex flex-row items-center justify-center">
+                <button
+                  className="w-[100px] h-[50px] rounded-[10px] bg-blue-500 text-white font-medium text-[15px] hover:bg-blue-400 active:ring-4 active:outline-none active:ring-blue-300"
+                  onClick={() => handleAnswerClick(inputValue)}
+                >
+                  Submit
+                </button>
+                <button
+                  className=" ml-3 w-[100px] h-[50px] rounded-[10px] bg-red-500 text-white font-medium text-[15px] hover:bg-red-400 active:ring-4 active:outline-none active:ring-red-300"
+                  onClick={handleClearInput}
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+            {openModal && (
+              <div className="w-[41%] max-h-min h-[61%] bg-white drop-shadow-xl rounded-[10px] mt-4 pt-3 border-2 border-solid border-gray-300 flex flex-row items-center justify-center">
+                <DrawCanva
+                  setOpenModal={setOpenModal}
+                  appendToInput={appendToInput}
+                />
+              </div>
+            )}
           </div>
-        ))}
+        ) : (
+          question.answers.map((answer) => (
+            <div
+              key={answer.id}
+              id={answer.id.toString()}
+              className={answerClass}
+              onClick={() => handleAnswerClick(answer.id)}
+            >
+              <p
+                className={
+                  "overflow-auto w-full h-[100%] " +
+                  (answer.content.length > 20
+                    ? "flex flex-row items-center justify-start"
+                    : "flex flex-row items-center justify-center")
+                }
+                style={{
+                  overflowWrap: "anywhere",
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}
+              >
+                {answer.content}
+              </p>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
