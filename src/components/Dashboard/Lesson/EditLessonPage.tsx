@@ -416,8 +416,12 @@ function EditLessonPage() {
             return;
           }
         }
-        if (question.type === "choice")
+        if (question.type === "choice") {
+          for (let i = 0; i < question.answers.length; i++) {
+            question.answers[i].is_correct = 0;
+          }
           question.answers[selectedRadios[question.id]].is_correct = 1;
+        }
       });
     });
 
