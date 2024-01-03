@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 
 const customAxios: AxiosInstance = axios.create({
-  baseURL: 'http://localhost/api',
+  baseURL: 'https://backend.vantanhly.io.vn/api',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
