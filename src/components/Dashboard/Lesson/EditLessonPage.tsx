@@ -410,7 +410,7 @@ function EditLessonPage() {
               return;
             }
           });
-        } else if (question.type === "write") {
+        } else if (question.type === "writing") {
           if (question.answers[0].content === "") {
             Toastify.error("Answer is required");
             return;
