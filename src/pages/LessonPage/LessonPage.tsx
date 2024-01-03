@@ -94,19 +94,25 @@ const LessonPage = () => {
       setAnswersClickable(true); // Switch to showing the first question
     }
   };
-  const handleAnswer = async (answerId: string, questionId: string) => {
+  const handleAnswer = async (
+    answerId: string,
+    questionId: string,
+    questionType: string
+  ) => {
     const element = document.getElementById(answerId.toString()) as HTMLElement;
     const formData = new FormData();
     formData.append("answer", answerId.toString());
     formData.append("question_id", questionId.toString());
     await customAxios.patch(`/check/${lessonId}`, formData).then((res) => {
       if (res.data.message === "Correct answer") {
-        element.classList.add(
-          "bg-emerald-200",
-          "border-solid",
-          "border-2",
-          "border-green-500"
-        );
+        if (questionType === "choice") {
+          element.classList.add(
+            "bg-emerald-200",
+            "border-solid",
+            "border-2",
+            "border-green-500"
+          );
+        }
         setTimeout(() => {
           element.classList.remove(
             "bg-emerald-200",
@@ -118,13 +124,14 @@ const LessonPage = () => {
           handleNext();
         }, 500);
       } else {
-        element.classList.add(
-          "border-solid",
-          "border-2",
-          "border-red-600",
-          "bg-red-200"
-        );
-
+        if (questionType === "choice") {
+          element.classList.add(
+            "border-solid",
+            "border-2",
+            "border-red-600",
+            "bg-red-200"
+          );
+        }
         setCorrectAnswer(res.data.correct_answer.content);
         setLives((prevCount) => Math.max(prevCount - 1, 0));
         setShowExplenation(true);

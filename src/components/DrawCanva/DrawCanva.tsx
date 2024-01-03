@@ -148,6 +148,7 @@ function DrawCanva({ setOpenModal, appendToInput }: Props) {
   // This will also need to redraw the canvas to reflect the change
   useEffect(() => {
     redraw();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lines]);
 
   useEffect(() => {
@@ -156,6 +157,7 @@ function DrawCanva({ setOpenModal, appendToInput }: Props) {
     } else if (lines.length > 0) {
       sendToServer();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lines]);
 
   useEffect(() => {
@@ -182,14 +184,14 @@ function DrawCanva({ setOpenModal, appendToInput }: Props) {
         <div className="absolute justify-end bottom-0 right-0 flex gap-0.5 pointer-events-none p-2">
           <button
             type="button"
-            className="pointer-events-auto px-3 py-2 text-xs font-medium text-center text-white bg-emerald-500 rounded-lg hover:bg-emerald-600 focus:ring-4 focus:outline-none focus:ring-emerald-300"
+            className="pointer-events-auto px-3 py-2 text-xs font-medium text-center text-white bg-emerald-500 rounded-lg hover:bg-emerald-600 active:ring-4 active:outline-none active:ring-emerald-300"
             onClick={resetCanvas}
           >
             Clear
           </button>
           <button
             type="button"
-            className="pointer-events-auto px-3 py-2 text-xs font-medium text-center text-white bg-emerald-500 rounded-lg hover:bg-emerald-600 focus:ring-4 focus:outline-none focus:ring-emerald-300"
+            className="pointer-events-auto px-3 py-2 text-xs font-medium text-center text-white bg-emerald-500 rounded-lg hover:bg-emerald-600 active:ring-4 active:outline-none active:ring-emerald-300"
             onClick={removeLastLine}
           >
             Undo
