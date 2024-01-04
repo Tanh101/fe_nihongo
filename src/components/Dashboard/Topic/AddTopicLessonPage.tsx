@@ -104,6 +104,7 @@ interface SectionInterface {
 function AddTopicLessonPage() {
   const navigate = useNavigate();
   const { topicId } = useParams();
+  const [isVisible, setIsVisible] = useState(false);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isVocabularyDisabled, setIsVocabularyDisabled] =
@@ -401,6 +402,32 @@ function AddTopicLessonPage() {
   ) => {
     const newSectionList = [...sectionList];
     newSectionList[sectionIndex].questions[questionIndex].type = value;
+    newSectionList[sectionIndex].questions[questionIndex].answers = [
+      {
+        id: "",
+        question_id: "",
+        content: "",
+        is_correct: 0,
+      },
+      {
+        id: "",
+        question_id: "",
+        content: "",
+        is_correct: 0,
+      },
+      {
+        id: "",
+        question_id: "",
+        content: "",
+        is_correct: 0,
+      },
+      {
+        id: "",
+        question_id: "",
+        content: "",
+        is_correct: 0,
+      },
+    ];
     setSectionList(newSectionList);
   };
 
@@ -409,6 +436,25 @@ function AddTopicLessonPage() {
     newSectionList[sectionIndex].word_id = value;
     setSectionList(newSectionList);
   };
+
+  // useEffect(() => {
+  //   const onScroll = () => {
+  //     console.log(window.scrollY);
+
+  //     if (window.scrollY > 10) {
+  //       setIsVisible(true);
+  //     } else {
+  //       setIsVisible(false);
+  //     }
+  //   };
+
+  //   window.addEventListener("scroll", onScroll);
+
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     window.removeEventListener("scroll", onScroll);
+  //   };
+  // }, []);
 
   return (
     <div className="add_topic_lesson_page_container w-full h-[100%] overflow-auto bg-gray-100 flex flex-row items-start justify-center">
@@ -419,6 +465,7 @@ function AddTopicLessonPage() {
         >
           <FontAwesomeIcon icon={faArrowLeftLong} /> Back
         </button>
+
         <div className="create_flashcard_page_title_container w-[100%] h-[100px] flex flex-row items-center justify-between min-w-max">
           <p className="create_flashcard_page_title text-2xl font-semibold text-black h-[40px] mt-2">
             New lesson
@@ -724,6 +771,14 @@ function AddTopicLessonPage() {
             </div>
           );
         })}
+        <div className="w-full h-[80px] flex flex-row items-center justify-end">
+          <button
+            className="create_flashcard_button w-[100px] h-[60px]  rounded-xl bg-violet-500 text-white bottom-24 hover:bg-violet-400"
+            onClick={handleCreateLesson}
+          >
+            Create
+          </button>
+        </div>
       </div>
     </div>
   );
