@@ -92,7 +92,7 @@ const Question: React.FC<QuestionProps> = ({
               </div>
             </div>
             {openModal && (
-              <div className="w-[41%] max-h-min h-[61%] bg-white drop-shadow-xl rounded-[10px] mt-4 pt-3 border-2 border-solid border-gray-300 flex flex-row items-center justify-center">
+              <div className="bg-white drop-shadow-xl rounded-[10px] mt-4 pt-3 border-2 border-solid border-gray-300 flex flex-row items-center justify-center">
                 <DrawCanva
                   setOpenModal={setOpenModal}
                   appendToInput={appendToInput}

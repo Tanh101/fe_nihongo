@@ -30,7 +30,7 @@ function WordDetailPage() {
   return (
     <div className="page_container">
       <Navbar active_category="search_word" />
-      <div className="word_detail_page_content bg-gray-100">
+      <div className="word_detail_page_content min-h-[100%] bg-gray-100">
         <WordSearch input={word} />
 
         {wordData && (

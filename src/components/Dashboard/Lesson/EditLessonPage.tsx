@@ -804,6 +804,14 @@ function EditLessonPage() {
             </div>
           );
         })}
+        <div className="w-full h-[80px] flex flex-row items-center justify-end">
+          <button
+            className="create_flashcard_button w-[100px] h-[60px]  rounded-xl bg-violet-500 text-white bottom-24 hover:bg-violet-400"
+            onClick={handleUpdateLesson}
+          >
+            Save
+          </button>
+        </div>
       </div>
       {loading && <LoadingShiba />}
     </div>
