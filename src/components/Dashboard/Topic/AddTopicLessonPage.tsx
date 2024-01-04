@@ -104,7 +104,6 @@ interface SectionInterface {
 function AddTopicLessonPage() {
   const navigate = useNavigate();
   const { topicId } = useParams();
-  const [isVisible, setIsVisible] = useState(false);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isVocabularyDisabled, setIsVocabularyDisabled] =
