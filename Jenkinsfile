@@ -22,7 +22,7 @@ pipeline {
         stage('SSH server') {
             steps {
                 sshagent(['ssh-remote']) {
-                    sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 172.31.18.160'
+                    sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 18.136.203.158 uname -a'
                 }
             }
         }
