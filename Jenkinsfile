@@ -11,13 +11,13 @@ pipeline {
                 }
             }
         }
-        stage('Docker Build') {
-            steps {
-                withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
-                    sh 'docker build -t lyvantanh1001/fe_nihongo:v1.0 .'
-                    sh 'docker push lyvantanh1001/fe_nihongo:v1.0'
-                }
-            }
-        }
+        // stage('Docker Build') {
+        //     steps {
+        //         withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/') {
+        //             sh 'docker build -t lyvantanh1001/fe_nihongo:v1.0 .'
+        //             sh 'docker push lyvantanh1001/fe_nihongo:v1.0'
+        //         }
+        //     }
+        // }
     } 
 }
