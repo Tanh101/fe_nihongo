@@ -22,7 +22,7 @@ pipeline {
         stage('SSH server') {
             steps {
                 sshagent(['ssh-remote']) {
-                    sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 18.136.203.158 "sudo touch demo.txt"'
+                    sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 18.136.203.158 "touch demo.txt"'
                 }
             }
         }
