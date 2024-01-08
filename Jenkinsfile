@@ -1,8 +1,12 @@
 pipeline {
     agent any
+
+    tools {nodejs "nodejs"}
+    
     environment {
         GIT_BRANCH = 'feature/ci-cd'
     }
+
     stages {
         stage('Clone') {
             steps {
@@ -11,7 +15,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Install Dependencies') {
             steps {
                 // Install Node.js dependencies using npm
