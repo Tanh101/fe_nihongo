@@ -104,7 +104,6 @@ interface SectionInterface {
 function EditLessonPage() {
   const navigate = useNavigate();
   const { lessonId } = useParams();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [lesson, setLesson] = useState<JapaneseLesson>({
     lessonId: "",
     lessonTitle: "",
