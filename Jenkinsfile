@@ -1,8 +1,6 @@
 pipeline {
     agent any
 
-    tools {nodejs "nodejs"}
-
     environment {
         GIT_BRANCH = 'feature/ci-cd'
     }
