@@ -19,12 +19,12 @@ pipeline {
         //         }
         //     }
         // }
-        stage('SSH server') {
-            steps {
-                sshagent(['ssh-remote']) {
-                    sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 18.136.203.158 uname -a'
-                }
-            }
-        }
+        // stage('SSH server') {
+        //     steps {
+        //         sshagent(['ssh-remote']) {
+        //             sh 'ssh -o StrictHostKeyChecking=no -l ubuntu 18.136.203.158 uname -a'
+        //         }
+        //     }
+        // }
     } 
 }
